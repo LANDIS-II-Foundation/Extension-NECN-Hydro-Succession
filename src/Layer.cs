@@ -411,7 +411,8 @@ namespace Landis.Extension.Succession.NECN
                 
                 //...Schedule flow from Box A to Box B
                 this.Nitrogen -= NFlow;
-                destination.Nitrogen += NFlow;
+                //destination.Nitrogen += NFlow;
+                destination.MonthlyNitrogenInputs += NFlow;
 
                 //PlugIn.ModelCore.UI.WriteLine("NFlow.  MineralN={0:0.00}, ImmobileN={1:0.000}.", SiteVars.MineralN[site],immobileN);
 

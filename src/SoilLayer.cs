@@ -24,6 +24,7 @@ namespace Landis.Extension.Succession.NECN
         private double microbial_nitrogen;
         private double enzymatic_concentration;
         private double monthlyCinputs;
+        private double monthlyNinputs;
         //private double decayValue;
         //private double fractionLignin;
         //private double netMineralization;
@@ -88,6 +89,21 @@ namespace Landis.Extension.Succession.NECN
             set
             {
                 monthlyCinputs = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Soil Organic Carbon
+        /// </summary>
+        public double MonthlyNitrogenInputs
+        {
+            get
+            {
+                return monthlyNinputs;
+            }
+            set
+            {
+                monthlyNinputs = value;
             }
         }
         //---------------------------------------------------------------------
@@ -194,7 +210,7 @@ namespace Landis.Extension.Succession.NECN
         private static double frac = 0.00014;          //p[5]  #fraction of unprotected SOM, Vogel
                                                            // p[6] 0.000466501;  NOT USED
                                                            // p[7] 0.000486085;  NOT USED
-        private static double cn_litter = 48.81375915;     //p[8] #C:N of litter (was: cnl) [Not used]
+        //private static double cn_litter = 48.81375915;     //p[8] #C:N of litter (was: cnl) [Not used]
         public static double CN_DOCN = 27.6;         //p[9] #C:N of soil (was: cns)  // Rob: only used for initializing DON
         //private static double cn_microbial = 9.803885526;  //p[10] #C:N of microbial biomass (was: cnm)
         private static double cn_microbial = 13;  //p[10] #C:N of microbial biomass, Vogel
@@ -223,30 +239,24 @@ namespace Landis.Extension.Succession.NECN
 
         public static void Decompose(int Year, int Month, ActiveSite site)
         {
-            
+
             //double som1c_soil = SiteVars.SoilPrimary[site].Carbon;
 
-            double hours_to_month = 24.0 * (double) AnnualClimate.DaysInMonth(Month, Year);
-            double mg_to_g = 1; // 000;
+            double month_to_hours =  24.0 * (double) AnnualClimate.DaysInMonth(Month, Year);
+            double mg_to_g = 1000;
 
-            if (SiteVars.SoilPrimary[site].Carbon > 0.0000001)
+            if (SiteVars.SoilPrimary[site].Carbon > 0.0) //000001)
             {
 
                 double SoilT = SiteVars.SoilTemperature[site];           
                 double SoilMoisture = SiteVars.SoilWaterContent[site];  //ML: This may be a volume of water while DAMM wants a VSWC
-               
-                double SOC = SiteVars.SoilPrimary[site].Carbon;                
-                double SON = SiteVars.SoilPrimary[site].Nitrogen;
-                double bulk_density = SiteVars.SoilBulkDensity[site];                
+                double bulk_density = SiteVars.SoilBulkDensity[site];
                 double particle_density = SiteVars.SoilParticleDensity[site];
-                double DOC = SiteVars.SoilPrimary[site].DOC;
-                double DON = SiteVars.SoilPrimary[site].DON;
-                double microbial_C = Math.Min(1.0, SiteVars.SoilPrimary[site].MicrobialCarbon);  //ML: This returns zero and messes up all the future calcs.
-                //double microbial_C = 1.9703;               
-                double microbial_N = SiteVars.SoilPrimary[site].MicrobialNitrogen;
-                double enzymatic_concentration = SiteVars.SoilPrimary[site].EnzymaticConcentration;
-                //double LitterCinput = 4.748544E-10;
-                double LitterCinput = SiteVars.SoilPrimary[site].MonthlyCarbonInputs / hours_to_month * mg_to_g;
+
+                double LitterCinput = SiteVars.SoilPrimary[site].MonthlyCarbonInputs / month_to_hours / mg_to_g;
+                double LitterNinput = SiteVars.SoilPrimary[site].MonthlyNitrogenInputs / month_to_hours / mg_to_g;
+                double c_loss = 0.0;
+                double cn_litter = LitterCinput / LitterNinput;
 
                 // seasonal DOC input:
                 //double A1 = 0.0005; //       #seasonal amplitude
@@ -255,63 +265,75 @@ namespace Landis.Extension.Succession.NECN
                 //double t = 1.0;
                 // double DOC_input = dref + A1 * Math.Sin(w1 * t - Math.PI / 2);  // # mg C cm-3 soil 
 
-                double porosity = 1.0 - (bulk_density / particle_density);                                      //calculate porosity                
-                //double soilm = -soilMoistureA + soilMoistureB * SoilMoisture;                              //calculate soil moisture scalar, omit gave negative values         
-                double soilm = SoilMoisture;                                                                //calculate soil moisture        
-                soilm = (soilm > saturation) ? saturation : soilm;                                          //set upper bound on soil moisture (saturation)
-                soilm = (soilm < 0.1) ? 0.1 : soilm;                                                        //set lower bound on soil moisture               
-                double o2 = dgas * o2airfrac * Math.Pow((porosity - soilm), (4.0 / 3.0));                   //calculate oxygen concentration
-                double sol_soc = dliq * Math.Pow(soilm, 3) * frac * SOC;  
-                double sol_son = dliq * Math.Pow(soilm, 3) * frac * SON;                                    //calculate unprotected SON
-                double vmax_dep = a_dep * Math.Exp(-ea_dep / (r * (SoilT + 273)));                          //calculate maximum depolymerization rate                
-                double vmax_upt = a_upt * Math.Exp(-ea_upt / (r * (SoilT + 273)));                          //calculate maximum depolymerization rate               
-                double upt_c = microbial_C * vmax_upt * DOC / (km_upt + DOC) * o2 / (km_o2 + o2);           //calculate DOC uptake
-                double c_mineralization = upt_c * (1 - c_use_efficiency);                                   //calculate initial C mineralization               
-                double upt_n = microbial_N * vmax_upt * DON / (km_upt + DON) * o2 / (km_o2 + o2);           //calculate DON uptake
-                double death_c = r_death * Math.Pow(microbial_C, 2);                                        //calculate density-dependent microbial C turnover
-                double death_n = r_death * Math.Pow(microbial_N, 2);                                        //calculate density-dependent microbial N turnover                
-                double enz_c = pconst * c_use_efficiency * upt_c;                                           //calculate potential enzyme C production
-                double enz_n = qconst * upt_n;                                                              //calculate potential enzyme N production
-                double eprod = (enz_c / cn_enzymes >= enz_n) ? enz_n : (enz_c / cn_enzymes);                //calculate actual enzyme based on Liebig's Law
-                double growth_c = (1 - pconst) * (upt_c * c_use_efficiency) + enz_c - cn_enzymes * eprod;   //calculate potential microbial biomass C growth
-                double growth_n = (1 - qconst) * upt_n + enz_n - eprod;                                     //calculate potential microbial biomass N growth
-                double growth = (growth_c / cn_microbial >= growth_n) ? growth_n : (growth_c / cn_microbial); //calculate actual microbial biomass growth based on Liebig's Law of the minimum (Schimel & Weintraub 2003 SBB)
-                double overflow = growth_c - cn_microbial * growth;                         //calculate overflow metabolism of C
-                double nmin = growth_n - growth;                                            //calculate N mineralization
+                for (int hours = 0; hours < month_to_hours; hours++)
+                {
 
-                double dmic_c = cn_microbial * growth - death_c;                            //calculate change in microbial C pool
-                double dmic_n = growth - death_n;                                           //calculate change in microbial N pool
+                    double SOC = SiteVars.SoilPrimary[site].Carbon / mg_to_g;
+                    double SON = SiteVars.SoilPrimary[site].Nitrogen / mg_to_g;
+                    double DOC = SiteVars.SoilPrimary[site].DOC / mg_to_g;
+                    double DON = SiteVars.SoilPrimary[site].DON / mg_to_g;
+                    double microbial_C = SiteVars.SoilPrimary[site].MicrobialCarbon / mg_to_g;
+                    double microbial_N = SiteVars.SoilPrimary[site].MicrobialNitrogen / mg_to_g;
+                    double enzymatic_concentration = SiteVars.SoilPrimary[site].EnzymaticConcentration / mg_to_g;
 
-                double eloss = r_ecloss * enzymatic_concentration;                          //calculate enzyme turnover
-                double dec = eprod - eloss;                                                 //calculate change in enzyme pool
+                    double porosity = 1.0 - (bulk_density / particle_density);                                      //calculate porosity                
+                                                                                                                    //double soilm = -soilMoistureA + soilMoistureB * SoilMoisture;                              //calculate soil moisture scalar, omit gave negative values         
+                    double soilm = SoilMoisture;                                                                //calculate soil moisture        
+                    soilm = (soilm > saturation) ? saturation : soilm;                                          //set upper bound on soil moisture (saturation)
+                    soilm = (soilm < 0.1) ? 0.1 : soilm;                                                        //set lower bound on soil moisture               
+                    double o2 = dgas * o2airfrac * Math.Pow((porosity - soilm), (4.0 / 3.0));                   //calculate oxygen concentration
+                    double sol_soc = dliq * Math.Pow(soilm, 3) * frac * SOC;
+                    double sol_son = dliq * Math.Pow(soilm, 3) * frac * SON;                                    //calculate unprotected SON
+                    double vmax_dep = a_dep * Math.Exp(-ea_dep / (r * (SoilT + 273)));                          //calculate maximum depolymerization rate                
+                    double vmax_upt = a_upt * Math.Exp(-ea_upt / (r * (SoilT + 273)));                          //calculate maximum depolymerization rate               
+                    double upt_c = microbial_C * vmax_upt * DOC / (km_upt + DOC) * o2 / (km_o2 + o2);           //calculate DOC uptake
+                    double c_mineralization = upt_c * (1 - c_use_efficiency);                                   //calculate initial C mineralization               
+                    double upt_n = microbial_N * vmax_upt * DON / (km_upt + DON) * o2 / (km_o2 + o2);           //calculate DON uptake
+                    double death_c = r_death * Math.Pow(microbial_C, 2);                                        //calculate density-dependent microbial C turnover
+                    double death_n = r_death * Math.Pow(microbial_N, 2);                                        //calculate density-dependent microbial N turnover                
+                    double enz_c = pconst * c_use_efficiency * upt_c;                                           //calculate potential enzyme C production
+                    double enz_n = qconst * upt_n;                                                              //calculate potential enzyme N production
+                    double eprod = (enz_c / cn_enzymes >= enz_n) ? enz_n : (enz_c / cn_enzymes);                //calculate actual enzyme based on Liebig's Law
+                    double growth_c = (1 - pconst) * (upt_c * c_use_efficiency) + enz_c - cn_enzymes * eprod;   //calculate potential microbial biomass C growth
+                    double growth_n = (1 - qconst) * upt_n + enz_n - eprod;                                     //calculate potential microbial biomass N growth
+                    double growth = (growth_c / cn_microbial >= growth_n) ? growth_n : (growth_c / cn_microbial); //calculate actual microbial biomass growth based on Liebig's Law of the minimum (Schimel & Weintraub 2003 SBB)
+                    double overflow = growth_c - cn_microbial * growth;                         //calculate overflow metabolism of C
+                    double nmin = growth_n - growth;                                            //calculate N mineralization
 
-                double decom_c = vmax_dep * p_enz_SOC * enzymatic_concentration * sol_soc / (km_dep + sol_soc + enzymatic_concentration);     //calculate depolymerization of SOC using ECA kinetics (Tang 2015 GMD)
-                double decom_n = vmax_dep * (1 - p_enz_SOC) * enzymatic_concentration * sol_son / (km_dep + sol_son + enzymatic_concentration); //calculate depolymerization of SON using ECA kinetics 
+                    double dmic_c = cn_microbial * growth - death_c;                            //calculate change in microbial C pool
+                    double dmic_n = growth - death_n;                                           //calculate change in microbial N pool
 
-                double dsoc = LitterCinput + (death_c * mic_to_som) - decom_c;                    //calculate change in SOC pool
-                PlugIn.ModelCore.UI.WriteLine(" DSOC:  LitterInput={0}, MicrobialDeath={1}, Decom_C={2}", LitterCinput, death_c, decom_c);
+                    double eloss = r_ecloss * enzymatic_concentration;                          //calculate enzyme turnover
+                    double dec = eprod - eloss;                                                 //calculate change in enzyme pool
 
-                double dson = (((LitterCinput/ cn_litter) + death_n) * mic_to_som) - decom_n;                    //calculate change in SON pool
+                    double decom_c = vmax_dep * p_enz_SOC * enzymatic_concentration * sol_soc / (km_dep + sol_soc + enzymatic_concentration);     //calculate depolymerization of SOC using ECA kinetics (Tang 2015 GMD)
+                    double decom_n = vmax_dep * (1 - p_enz_SOC) * enzymatic_concentration * sol_son / (km_dep + sol_son + enzymatic_concentration); //calculate depolymerization of SON using ECA kinetics 
 
-                double ddoc = decom_c + death_c * (1 - mic_to_som) + cn_enzymes * eloss - upt_c; //calculate change in DOC pool
-                double ddon = decom_n + death_n * (1 - mic_to_som) + eloss - upt_n; //calculate change in DON pool
+                    double dsoc = LitterCinput + (death_c * mic_to_som) - decom_c;                    //calculate change in SOC pool
+                    PlugIn.ModelCore.UI.WriteLine(" DSOC:  LitterInput={0:0.0}, MicrobialDeath={1:0.0}, Decom_C={2:0.0}", LitterCinput, death_c, decom_c);
 
-                SiteVars.SoilPrimary[site].Carbon += dsoc * (hours_to_month/ mg_to_g);
-                SiteVars.SoilPrimary[site].Nitrogen += dson * (hours_to_month / mg_to_g);
-                SiteVars.SoilPrimary[site].DOC += ddoc * (hours_to_month / mg_to_g);
-                SiteVars.SoilPrimary[site].DON += ddon * (hours_to_month / mg_to_g);
-                SiteVars.SoilPrimary[site].MicrobialCarbon += dmic_c * (hours_to_month / mg_to_g);
-                SiteVars.SoilPrimary[site].MicrobialNitrogen += dmic_n * (hours_to_month / mg_to_g);
-                SiteVars.SoilPrimary[site].EnzymaticConcentration += dec * (hours_to_month / mg_to_g);
+                    double dson = ((LitterNinput + death_n) * mic_to_som) - decom_n;                    //calculate change in SON pool
 
-                //double dcout = cmin + overflow;                                             //calculate C efflux
+                    double ddoc = decom_c + death_c * (1 - mic_to_som) + cn_enzymes * eloss - upt_c; //calculate change in DOC pool
+                    double ddon = decom_n + death_n * (1 - mic_to_som) + eloss - upt_n; //calculate change in DON pool
 
-                double c_loss = (c_mineralization + overflow) * (hours_to_month / mg_to_g);                //calculate C efflux
-                                                                                                           //double c_loss_m2 = (c_mineralization + overflow) * (hours_to_month *10000*10/mg_to_g);                //calculate C efflux from cm3 to m2
+                    SiteVars.SoilPrimary[site].Carbon += dsoc * mg_to_g; 
+                    SiteVars.SoilPrimary[site].Nitrogen += dson * mg_to_g; 
+                    SiteVars.SoilPrimary[site].DOC += ddoc * mg_to_g; 
+                    SiteVars.SoilPrimary[site].DON += ddon * mg_to_g; 
+                    SiteVars.SoilPrimary[site].MicrobialCarbon += dmic_c * mg_to_g; 
+                    SiteVars.SoilPrimary[site].MicrobialNitrogen += dmic_n * mg_to_g;
+                    SiteVars.SoilPrimary[site].EnzymaticConcentration += dec * mg_to_g; 
+
+                    //double dcout = cmin + overflow;                                             //calculate C efflux
+
+                    c_loss += (c_mineralization + overflow) * mg_to_g; //calculate C efflux
+                } 
 
                 //SiteVars.SoilPrimary[site].Respiration(c_loss, site);  // RMS: 11-13-2019: This causes negative mineral N.  
 
                 SiteVars.SoilPrimary[site].MonthlyCarbonInputs = 0.0;  // Done with these now.
+                SiteVars.SoilPrimary[site].MonthlyNitrogenInputs = 0.0;  // Done with these now.
 
                 double cLeached = 0.0;  // Carbon leached to a stream
 

@@ -387,9 +387,9 @@ namespace Landis.Extension.Succession.NECN
             // Initialize other components:
             foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
             {
-                SiteVars.SoilPrimary[site].EnzymaticConcentration = 1.0;
-                SiteVars.SoilPrimary[site].MicrobialCarbon = 1.0;
-                SiteVars.SoilPrimary[site].MicrobialNitrogen = 1.0;
+                SiteVars.SoilPrimary[site].EnzymaticConcentration = 0.001;
+                SiteVars.SoilPrimary[site].MicrobialCarbon = 0.00001;
+                SiteVars.SoilPrimary[site].MicrobialNitrogen = 0.000001;
             }
         }
         ////---------------------------------------------------------------------

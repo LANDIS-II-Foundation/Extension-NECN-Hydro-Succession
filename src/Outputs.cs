@@ -787,6 +787,8 @@ namespace Landis.Extension.Succession.NECN
                     
                     //SiteVars.SOM1surface[site].Carbon
                     SiteVars.SoilPrimary[site].Carbon
+                    + SiteVars.SoilPrimary[site].DOC
+                    + SiteVars.SoilPrimary[site].MicrobialCarbon
                     //+ SiteVars.SOM2[site].Carbon
                     //+ SiteVars.SOM3[site].Carbon
                     ;

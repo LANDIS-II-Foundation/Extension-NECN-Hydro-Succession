@@ -1,6 +1,6 @@
 >>SE single cell
 LandisData	"NECN Succession DAMM"
-Timestep  5
+Timestep  1
 
 SeedingAlgorithm  WardSeedDispersal
 
@@ -21,8 +21,8 @@ SoilBulkDensityMapName			./SingleCellRastersTina/singlecell_point56.tif
 SoilParticleDensityMapName		./SingleCellRastersTina/singlecell_2point62.tif
 InitialSOC_PrimaryMapName			./SingleCellRastersTina/singlecell_441point4.tif
 InitialSON_PrimaryMapName			./SingleCellRastersTina/singlecell_31point5.tif
-InitialDeadWoodSurfaceMapName	./SingleCellRastersTina/singlecell_0.tif
-InitialDeadCoarseRootsMapName	./SingleCellRastersTina/singlecell_0.tif
+InitialDeadWoodSurfaceMapName	./SingleCellRastersTina/singlecell_31point5.tif
+InitialDeadCoarseRootsMapName	./SingleCellRastersTina/singlecell_31point5.tif
 
 CalibrateMode 	yes
 SmokeModelOutputs yes

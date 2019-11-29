@@ -1,0 +1,240 @@
+---
+title: "DAMM-MCNiPv0"
+author: "Rose Abramoff"
+date: "5/4/2017"
+output: html_document
+---
+
+DAMM-MCNiP is a model of soil decomposition, combined from the DAMM (Davidson et al. 2012 Global Change Biology) and MCNiP (Finzi et al. 2015 Global Change Biology) decomposition models. Model testing is described in the manuscript Abramoff et al., under revision at JGR Biogeosciences).
+
+Load required libraries
+```{r}
+library(FME)
+```
+
+Load flux data from Davidson et al. (2012) - available at Harvard Forest Data Archives: HF243-01
+URL: http://harvardforest.fas.harvard.edu/harvard-forest-data-archive
+```{r}
+#Assuming that DAMM-MCNiPv0 is the working directory, reads in flux data
+df <- read.csv(paste0(getwd(),"/HF243-01_2009_Trenched_Flux.csv"))
+data09 = df[,"data"]
+damm09 = df[,"damm"]
+arrhenius09 = df[,"arrhenius"]
+
+#Set up color palette for plotting
+cbPalette <- c("#000000","#E69F00", "#009E73", "#0072B2", "#CC79A7", "#D55E00", "#56B4E9",    "#F0E442")
+seq = seq(-1,4.5)
+```
+
+Set x-axes: decimal doy in hourly increments
+```{r}
+xa09 = seq(113,(113+189), length.out = length(data09))       #data
+xb09 = seq(113,(113+189), length.out = 4558)                 #damm-mcnip
+xc09 = seq(113,(113+189), length.out = length(damm09))       #damm alone
+xd09 = seq(113,(113+189), length.out = length(arrhenius09))  #arrhenius 
+
+```
+
+Load parameters and input data
+```{r}
+parameters <- read.csv(paste0(getwd(),"/parameters-original.csv"))
+
+inputdata <- read.csv(paste0(getwd(),"/inputdata-original.csv"))
+```
+
+Set up model run
+```{r}
+p = parameters$default #select either default parameters or fitted to 2009 flux data
+
+#seasonal doc input
+A1=0.0005        #seasonal amplitude
+A2=0            #daily amplitude
+w1=2*pi/4559
+w2=2*pi
+dref=0.0005     #reference input
+t=1:4559
+DOC_input = dref+A1*sin(w1*t-pi/2)+A2*sin(w2*t) # mg C cm-3 soil hour-1
+
+#seasonal litter input
+A1=0.0005       #seasonal amplitude
+A2=0            #daily amplitude
+w1=2*pi/4559
+w2=2*pi
+lref=0.0005     #reference input
+t=1:4559
+Litterc_input = lref+A1*sin(w1*t-pi/2)+A2*sin(w2*t) # mg C cm-3 soil hour-1
+```
+
+Set up model function
+```{r fme}
+Model <- function (p, times=seq(1,4559)) {
+    derivs <- function(t,s,p) { #t = time, s = state, p = pars
+        with(as.list(c(s,p)), {
+              #define parameters
+              r <- 0.008314                         #gas constant
+              ea_dep <- p[1]                        #activation energy of SOM depolymerization
+              ea_upt <- p[2]                        #activation energy of DOC uptake           
+              a_dep <- p[3]                         #pre-exponential constant for SOM depolymerization
+              a_upt <- p[4]                         #pre-exponential constant for uptake
+              frac <- p[5]                          #fraction of unprotected SOM, Magill et al. 2000      
+              litter_c <- litterc_inputin(t)        #litter C input to SOC
+              cnl <- p[8]                           #C:N of litter
+              litter_n <- litterc_inputin(t)/cnl    #litter N input to SOC
+              doc_input <- doc_inputin(t)           #litter C input to DOC
+              cns <- p[9]                           #C:N of soil
+              don_input <- doc_inputin(t)/cns       #litter N input to DOC
+              cnm <- p[10]                          #C:N of microbial biomass
+              cne <- p[11]                          #C:N of enzymes
+              km_dep <- p[12]                       #half-saturation constant for SOM depolymerization
+              km_upt <- p[13]                       #half-saturation constant for DOC uptake
+              r_ecloss <- p[14]                     #enzyme turnover rate           
+              r_death <- p[15]                      #microbial turnover rate
+              cue <- p[16]                          #carbon use efficiency
+              a <- p[17]                            #proportion of enzyme pool acting on SOC
+              pconst <- p[18]                       #proportion of assimilated C allocated to enzyme production
+              qconst <- p[19]                       #proportion of assimilated N allocated to enzyme production
+              mic_to_som <- p[20]                   #fraction of dead microbial biomass allocated to SOM
+              km_o2 <- p[21]                        #Michaelis constant for O2
+              dgas <- p[22]                         #diffusion coefficient for O2 in air
+              dliq <- p[23]                         #diffusion coefficient for unprotected SOM and DOM in liquid
+              o2airfrac <- p[24]                    #volume fraction of O2 in air
+              bd <- p[25]                           #bulk density
+              pd <- p[26]                           #particle density
+              sat <- p[29]                          #saturation level
+              
+                    porosity = 1 - bd/pd            #calculate porosity
+                    soilm = -p[27] + p[28]*mois(t)  #calculate soil moisture scalar
+                    soilm = ifelse(soilm > sat, sat, soilm) #set upper bound on soil moisture (saturation)
+                    soilm = ifelse(soilm < 0.1, 0.1, soilm) #set lower bound on soil moisture
+                    o2 <- dgas * o2airfrac * (porosity - soilm)^(4/3) #calculate oxygen concentration
+                    sol_soc <- dliq * soilm^3 * frac * soc            #calculate unprotected SOC
+                    sol_son <- dliq * soilm^3 * frac * son            #calculate unprotected SON
+                    vmax_dep = a_dep * exp(-ea_dep / (r * (temp(t) + 273))) #calculate maximum depolymerization rate
+                    vmax_upt = a_upt * exp(-ea_upt / (r * (temp(t) + 273))) #calculate maximum depolymerization rate
+                    
+                     upt_c <- mic_c * vmax_upt * doc / (km_upt + doc) * o2/(km_o2 + o2) #calculate DOC uptake
+                     cmin <- upt_c * (1-cue)        #calculate initial C mineralization
+                     upt_n <- mic_n * vmax_upt * don / (km_upt + don) * o2/(km_o2 + o2) #calculate DON uptake
+                     death_c <- r_death * mic_c^2   #calculate density-dependent microbial C turnover
+                     death_n <- r_death * mic_n^2   #calculate density-dependent microbial N turnover
+                    
+                     enz_c <- pconst * cue * upt_c  #calculate potential enzyme C production
+                     enz_n <- qconst * upt_n        #calculate potential enzyme N production
+                     eprod <- ifelse(enz_c/cne >= enz_n, enz_n, enz_c/cne) #calculate actual enzyme based on Liebig's Law
+                     growth_c <- (1-pconst) * (upt_c * cue) + enz_c - cne * eprod #calculate potential microbial biomass C growth
+                     growth_n <- (1-qconst) * upt_n + enz_n - eprod #calculate potential microbial biomass N growth
+                     growth <- ifelse(growth_c/cnm >= growth_n, growth_n, growth_c/cnm) #calculate actual microbial biomass growth based on Liebig's Law of the minimum (Schimel & Weintraub 2003 SBB)
+                     
+                     overflow <- growth_c - cnm * growth #calculate overflow metabolism of C
+                     nmin <- growth_n - growth           #calculate N mineralization
+                    
+                     dmic_c <- cnm*growth - death_c      #calculate change in microbial C pool
+                     dmic_n <- growth - death_n          #calculate change in microbial N pool
+                    
+                     eloss <- r_ecloss * ec              #calculate enzyme turnover
+                     dec <- eprod - eloss                #calculate change in enzyme pool
+                    
+                     decom_c = vmax_dep * a * ec * sol_soc / (km_dep + sol_soc + ec) #calculate depolymerization of SOC using ECA kinetics (Tang 2015 GMD)
+                     decom_n = vmax_dep * (1-a) * ec * sol_son / (km_dep + sol_son + ec) #calculate depolymerization of SON using ECA kinetics 
+                    
+                    dsoc = litter_c + death_c * mic_to_som - decom_c #calculate change in SOC pool
+                    dson = litter_n + death_n * mic_to_som - decom_n #calculate change in SON pool
+                    ddoc = doc_input + decom_c + death_c * (1-mic_to_som) + cne*eloss - upt_c #calculate change in DOC pool
+                    ddon = don_input + decom_n + death_n * (1-mic_to_som) + eloss - upt_n #calculate change in DON pool
+                    dcout = cmin + overflow         #calculate C efflux
+              return(list(c(dmic_c, dmic_n, dsoc, dson, ddoc, ddon, dec, dcout)))
+        })
+    }
+    s <- c(mic_c = 1.9703, mic_n = 0.1970, soc = 65.25 , son = 2.1917, doc = 0.0020, don = 0.0011, ec = 0.0339, cout = 0) #initial states
+    temp <- approxfun(input$indexHour, input$temperatureC) #temperature input function
+    mois <- approxfun(input$indexHour, input$moistureVWC) #moisture input function
+    doc_inputin <- approxfun(1:4559,DOC_input) #DOC input function
+    litterc_inputin <- approxfun(1:4559,Litterc_input) #SOC input function
+    output <- ode(y = s, times=times, func=derivs, parms = p) #solve ode, return output
+      return(as.data.frame(cbind(time = output[1:4558,1], cout = diff(output[1:4559,"cout"]), soc = output[1:4558,"soc"], mic_c = output[1:4558,"mic_c"], mic_n = output[1:4558,"mic_n"], son = output[1:4558,"son"], doc = output[1:4558,"doc"], don = output[1:4558,"don"], ec = output[1:4558,"ec"] )))
+}
+```
+
+Run model
+```{r}
+out <- NULL                           #initalize output matrix
+ptm <- proc.time()                    #start timer
+input <- list(inputdata)[[1]]         #define input data
+out <- as.data.frame(Model(p))        #run model
+proc.time() - ptm                     #end timer
+
+save(out, file="DAMM-MCNiP_output.Rdata") #save output
+```
+
+Plot (a) timeseries and (b) regression of model output compared to observed C efflux, DAMM alone, and Arrhenius
+```{r}
+sp <- 0.5 #point size
+sa <- 1   #axis size
+
+#convert to g cm-3 hr-1
+arr09 <- arrhenius09/100
+dam09 <- damm09/100
+dmc09 <- out$cout*1000
+datas09 <- data09/100
+#fit regression
+fitDMC09 <- summary(lm(datas09[1:4558] ~ dmc09))
+fitDAM09 <- summary(lm(datas09 ~ dam09))
+fitARR09 <- summary(lm(datas09 ~ arr09))
+
+plot1 <- function(){
+#plot timeseries
+par(mfrow = c(1,2))
+par(mar = c(3.5,3.5,2,4)+.1)
+par(oma = c(0,0,0,0))
+plot(xa09, data09/100, col = cbPalette[1], xlim = c(100,315), ylim = c(0,3.3), cex = sp, lty = 1, cex.axis = sa, pch = 16, ann = FALSE) 
+points(xb09, out$cout*1000, col = cbPalette[2], cex = sp, pch = 16)
+points(xc09, damm09/100, col = cbPalette[3], cex = sp, pch = 16)
+points(xd09, arrhenius09/100, col = cbPalette[4], cex = sp, pch = 16)
+mtext(side = 1, text = "Day of Year", line = 2, cex = sa)
+mtext(side = 2, text = expression("C efflux (" ~ mu ~ "gC" ~ cm^{-3} ~ hr^{-1} ~ ")"), line = 2, cex = 1)
+legend("topright", c("Data", "DAMM-MCNiP","DAMM","Arrhenius"),
+       col = c(cbPalette[1],cbPalette[2],cbPalette[3],cbPalette[4]), pch = c(16,16,16), cex = 0.8)
+mtext("a)", side = 3, line = 1, adj = -0.2, font = 2, cex=1.25)
+
+#plot regression
+  seq = -1:10
+  plot(0:6, 0:6, xlim = c(0,3.0), ylim = c(0,3.3), col = rgb(0.5,0.5,0.5), type = "l", lty = 2, lwd = 1, cex.axis = sa, ann = FALSE)
+  lines(seq, seq*fitDMC09$coefficients[2] + fitDMC09$coefficients[1], col = cbPalette[2], lty = 2) 
+  lines(seq, seq*fitDAM09$coefficients[2] + fitDAM09$coefficients[1], col = cbPalette[3], lty = 2) 
+  lines(seq, seq*fitARR09$coefficients[2] + fitARR09$coefficients[1], col = cbPalette[4], lty = 2) 
+  points(dmc09, datas09[1:4558], col = cbPalette[2], cex = sp, pch = 16)
+  points(dam09, datas09, col = cbPalette[3], cex = sp, pch = 16)
+  points(arr09, datas09, col = cbPalette[4], cex = sp, pch = 16)
+  mtext(side = 2, text = expression("Observed C efflux (" ~ mu ~ "gC" ~ cm^{-3} ~ hr^{-1} ~ ")"), line = 2, cex = sa)
+  mtext(side = 1, text = expression("Predicted C efflux (" ~ mu ~ "gC" ~ cm^{-3} ~ hr^{-1} ~ ")"), line = 2.5, cex = sa)
+  legend("topright", c("1:1", "DAMM-MCNiP","DAMM","Arrhenius"),
+         col = c(cbPalette[1],cbPalette[2],cbPalette[3],cbPalette[4]), pch = c(NA,16,16,16), lty = c(2,NA,NA,NA), cex = 0.8, bg = "white")
+  mtext("b)", side = 3, line = 1, adj = -0.25, font = 2, cex=1.25)
+}
+
+plot1()
+```
+
+Plot selected model pools: (a) SOC, (b) Microbial biomass C, (c) DOC, (d) Enzymes
+```{r}
+plot2 <- function(){
+par(mfrow = c(2,2))
+par(mar = c(3.5,3.5,2,4)+.9)
+par(oma = c(0,0,0,0))
+sp=0.5
+sa=1.25
+plot(xb09, out$soc, col = cbPalette[1], xlim = c(100,315), ylim=c(62,70), cex = sp, lty = 1, cex.axis = sa, pch = 16, ylab=expression("Pools (mgC" ~ cm^{-3} ~ ")"), xlab="Day of Year", main="SOC", cex.lab = sa) 
+mtext("a)", side = 3, line = 1, adj = -0.25, font = 2, cex=1.25)
+
+plot(xb09, out$mic_c, col = cbPalette[1], xlim = c(100,315), ylim=c(0,3.0), cex = sp, lty = 1, cex.axis = sa, pch = 16, ylab=expression("Pools (mgC" ~ cm^{-3} ~ ")"), xlab="Day of Year", main="Microbial biomass", cex.lab = sa) 
+mtext("b)", side = 3, line = 1, adj = -0.25, font = 2, cex=1.25)
+
+plot(xb09, out$doc, col = cbPalette[1], xlim = c(100,315), ylim=c(0,0.002), cex = sp, lty = 1, cex.axis = sa, pch = 16, ylab=expression("Pools (mgC" ~ cm^{-3} ~ ")"), xlab="Day of Year", main="DOC", cex.lab = sa) 
+mtext("c)", side = 3, line = 1, adj = -0.25, font = 2, cex=1.25)
+
+plot(xb09, out$ec, col = cbPalette[1], xlim = c(100,315), ylim=c(0,0.065), cex = sp, lty = 1, cex.axis = sa, pch = 16, ylab=expression("Pools (mgC" ~ cm^{-3} ~ ")"), xlab="Day of Year", main="Enzymes", cex.lab = sa) 
+mtext("d)", side = 3, line = 1, adj = -0.25, font = 2, cex=1.25)
+}
+
+plot2()
+```

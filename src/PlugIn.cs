@@ -40,6 +40,7 @@ namespace Landis.Extension.Succession.NECN
         public static double ProbEstablishAdjust;
 
         public static int FutureClimateBaseYear;
+        private ICommunity initialCommunity;
         //public static int B_MAX;
 
         //---------------------------------------------------------------------
@@ -212,8 +213,7 @@ namespace Landis.Extension.Succession.NECN
         }
         //---------------------------------------------------------------------
 
-        protected override void InitializeSite(ActiveSite site,
-                                               ICommunity initialCommunity)
+        protected override void InitializeSite(ActiveSite site)
         {
 
             InitialBiomass initialBiomass = InitialBiomass.Compute(site, initialCommunity);
@@ -221,7 +221,51 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.SoilPrimary[site].DOC = Parameters.InitialDOC;
             SiteVars.SoilPrimary[site].DON = SiteVars.SoilPrimary[site].DOC / SoilLayer.CN_DOCN;
         }
+        //---------------------------------------------------------------------
 
+        //protected override void InitializeSite(ActiveSite site, ICommunity initialCommunity)
+        //{
+
+        //    InitialBiomass initialBiomass = InitialBiomass.Compute(site, initialCommunity);
+        //    SiteVars.MineralN[site] = Parameters.InitialMineralN;
+        //    SiteVars.SoilPrimary[site].DOC = Parameters.InitialDOC;
+        //    SiteVars.SoilPrimary[site].DON = SiteVars.SoilPrimary[site].DOC / SoilLayer.CN_DOCN;
+        //}
+        public override void InitializeSites(string initialCommunitiesText, string initialCommunitiesMap, ICore modelCore)
+        {
+            ModelCore.UI.WriteLine("   Loading initial communities from file \"{0}\" ...", initialCommunitiesText);
+            Landis.Library.InitialCommunities.DatasetParser parser = new Landis.Library.InitialCommunities.DatasetParser(Timestep, ModelCore.Species);
+            Landis.Library.InitialCommunities.IDataset communities = Landis.Data.Load<Landis.Library.InitialCommunities.IDataset>(initialCommunitiesText, parser);
+
+            ModelCore.UI.WriteLine("   Reading initial communities map \"{0}\" ...", initialCommunitiesMap);
+            IInputRaster<uintPixel> map;
+            map = ModelCore.OpenRaster<uintPixel>(initialCommunitiesMap);
+            using (map)
+            {
+                uintPixel pixel = map.BufferPixel;
+                foreach (Site site in ModelCore.Landscape.AllSites)
+                {
+                    map.ReadBufferPixel();
+                    uint mapCode = pixel.MapCode.Value;
+                    if (!site.IsActive)
+                        continue;
+
+                    //if (!modelCore.Ecoregion[site].Active)
+                    //    continue;
+
+                    //modelCore.Log.WriteLine("ecoregion = {0}.", modelCore.Ecoregion[site]);
+
+                    ActiveSite activeSite = (ActiveSite)site;
+                    initialCommunity = communities.Find(mapCode);
+                    if (initialCommunity == null)
+                    {
+                        throw new ApplicationException(string.Format("Unknown map code for initial community: {0}", mapCode));
+                    }
+
+                    InitializeSite(activeSite);
+                }
+            }
+        }
 
         //---------------------------------------------------------------------
         // This method does not trigger reproduction
@@ -409,7 +453,7 @@ namespace Landis.Extension.Succession.NECN
         /// This is a Delegate method to base succession.
         /// </summary>
 
-        public void AddNewCohort(ISpecies species, ActiveSite site)
+        public void AddNewCohort(ISpecies species, ActiveSite site, string reproductionType)
         {
             float[] initialBiomass = CohortBiomass.InitialBiomass(species, SiteVars.Cohorts[site], site);
             SiteVars.Cohorts[site].AddNewCohort(species, 1, initialBiomass[0], initialBiomass[1]);

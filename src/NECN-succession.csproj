@@ -5,23 +5,23 @@
     <AssemblyName>Landis.Extension.Succession.NECN-DAMM</AssemblyName>
     <AssemblyTitle>Landis.Extension.Succession.NECN-DAMM</AssemblyTitle>
     <AssemblyCopyright>Landis-II-Foundation</AssemblyCopyright>
+    <Copyright>Landis-II-Foundation</Copyright>
     <AssemblyVersion>7.0</AssemblyVersion>
+    <Version>7.0</Version>
+    <FileVersion>7.0</FileVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Company>LANDIS-II Foundation</Company>
     <RepositoryUrl>https://github.com/LANDIS-II-Foundation/Extension-NECN-Succession</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageLicenseUrl>https://github.com/LANDIS-II-Foundation/Extension-NECN-Succession/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>http://www.landis-ii.org</PackageProjectUrl>
     <NeutralLanguage>English</NeutralLanguage>
     <Authors>LANDIS-II Foundation</Authors>
-    <Product>Landis.Extension.Succession.NECN-v6</Product>
-    <Copyright>Landis-II-Foundation</Copyright>
-    <Version>7.0</Version>
-    <PackageTags>LANDIS-II;Landis;Extension;Succession;Carbon;Nitrogen</PackageTags>
+    <Product>Landis.Extension.Succession.NECN-v7</Product>
     <Description></Description>
+    <PackageTags>LANDIS-II;Landis;Extension;Succession;Carbon;Nitrogen</PackageTags>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageReleaseNotes>.NET Standard 2.0 update</PackageReleaseNotes>
-    <FileVersion>7.0</FileVersion>
-    <Company>LANDIS-II Foundation</Company>
+    <PackageLicenseUrl>https://github.com/LANDIS-II-Foundation/Extension-NECN-Succession/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>http://www.landis-ii.org</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>

@@ -111,10 +111,12 @@ namespace Landis.Extension.Succession.NECN
         double InitialDOC { get; }
         double InitialFineFuels { get; }
         double FractionLitterDecayToDOC { get; }
-        //double DecayRateSurf { get; }
-        //double DecayRateSOM1 { get; }
-        //double DecayRateSOM2 { get; }
-        //double DecayRateSOM3 { get; }
+        double MicrobialTurnoverRate { get; }
+        double FractionUnprotectedSOM { get; }
+        double EnzymeTurnoverRate { get; }
+        double CarbonUseEfficiency { get; }
+        double ProportionEnzymeActing { get; }
+        double FractionMicrobialToSOM { get; }
 
 
     }

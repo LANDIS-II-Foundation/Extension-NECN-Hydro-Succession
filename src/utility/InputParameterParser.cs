@@ -229,21 +229,29 @@ namespace Landis.Extension.Succession.NECN
             ReadVar(fracDOC);
             parameters.SetFractionDOC(fracDOC.Value);
 
-            //InputVar<double> drsoms = new InputVar<double>("DecayRateSurf");
-            //ReadVar(drsoms);
-            //parameters.SetDecayRateSurf(drsoms.Value);
+            InputVar<double> mTR = new InputVar<double>("MicrobialTurnoverRate");
+            ReadVar(mTR);
+            parameters.SetMicrobialTurnoverRate(mTR.Value);
 
-            //InputVar<double> drsom1 = new InputVar<double>("DecayRateSOM1");
-            //ReadVar(drsom1);
-            //parameters.SetDecayRateSOM1(drsom1.Value);
+            InputVar<double> fUSOM = new InputVar<double>("FractionUnprotectedSOM");
+            ReadVar(fUSOM);
+            parameters.SetFractionUnprotectedSOM(fUSOM.Value);
 
-            //InputVar<double> drsom2 = new InputVar<double>("DecayRateSOM2");
-            //ReadVar(drsom2);
-            //parameters.SetDecayRateSOM2(drsom2.Value);
+            InputVar<double> eTR = new InputVar<double>("EnzymeTurnoverRate");
+            ReadVar(eTR);
+            parameters.SetEnzymeTurnoverRate(eTR.Value);
 
-            //InputVar<double> drsom3 = new InputVar<double>("DecayRateSOM3");
-            //ReadVar(drsom3);
-            //parameters.SetDecayRateSOM3(drsom3.Value);
+            InputVar<double> cue = new InputVar<double>("CarbonUseEfficiency");
+            ReadVar(cue);
+            parameters.SetCarbonUseEfficiency(cue.Value);
+
+            InputVar<double> pEA = new InputVar<double>("ProportionEnymeActing");
+            ReadVar(pEA);
+            parameters.SetProportionEnzymeActing(pEA.Value);
+
+            InputVar<double> fMSOM = new InputVar<double>("FractionMicrobialToSOM");
+            ReadVar(fMSOM);
+            parameters.SetFractionMicrobialToSOM(fMSOM.Value);
 
             InputVar<string> anppMaps = new InputVar<string>("ANPPMapNames");
             if (ReadOptionalVar(anppMaps))

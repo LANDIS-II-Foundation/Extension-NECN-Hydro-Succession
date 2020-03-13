@@ -36,12 +36,6 @@ namespace Landis.Extension.Succession.NECN
         private string soilParticleDensityMapName;
         private string initialSOC_PrimaryMapName;
         private string initialSON_PrimaryMapName;
-        //private string initialSOM1CSurfaceMapName;
-        //private string initialSOM1NSurfaceMapName;
-        //private string initialSOM2CMapName;
-        //private string initialSOM2NMapName;
-        //private string initialSOM3CMapName;
-        //private string initialSOM3NMapName;
 
         private bool calibrateMode;
         private bool smokeModelOutputs;
@@ -56,10 +50,12 @@ namespace Landis.Extension.Succession.NECN
         private double initDOC;
         private double initFineFuels;
         private double fractionLitterDecayToDOC;
-        //private double decayRateSurf;
-        //private double decayRateSOM1;
-        //private double decayRateSOM2;
-        //private double decayRateSOM3;
+        private double microbialTurnoverRate;
+        private double fractionUnprotectedSOM;
+        private double enzymeTurnoverRate;
+        private double carbonUseEfficiency;
+        private double proportionEnymeActing;
+        private double fractionMicrobialToSOM;
 
         private ISpeciesDataset speciesDataset;
         
@@ -438,38 +434,6 @@ namespace Landis.Extension.Succession.NECN
                 return latitude;
             }
         }
-        ////-----------------------------------------------
-        //public double DecayRateSurf
-        //{
-        //    get
-        //    {
-        //        return decayRateSurf;
-        //    }
-        //}
-        //-----------------------------------------------
-        //public double DecayRateSOM1
-        //{
-        //    get
-        //    {
-        //        return decayRateSOM1;
-        //    }
-        //}//---------------------------------------------------------------------
-        //public double DecayRateSOM2
-        //{
-        //    get
-        //    {
-        //        return decayRateSOM2;
-        //    }
-        //}
-        ////---------------------------------------------------------------------
-        //public double DecayRateSOM3
-        //{
-        //    get
-        //    {
-        //        return decayRateSOM3;
-        //    }
-        //}
-        //-----------------------------------------------
         public double DenitrificationRate
         {
             get
@@ -481,21 +445,13 @@ namespace Landis.Extension.Succession.NECN
         public double InitialDOC { get { return initDOC; } }
         public double InitialFineFuels { get { return initFineFuels; } }
         public double FractionLitterDecayToDOC { get { return fractionLitterDecayToDOC; } }
+        public double MicrobialTurnoverRate { get { return microbialTurnoverRate;  } }
+        public double FractionUnprotectedSOM { get { return fractionUnprotectedSOM; } }
+        public double EnzymeTurnoverRate { get { return enzymeTurnoverRate; } }
+        public double CarbonUseEfficiency { get { return carbonUseEfficiency;  } }
+        public double ProportionEnzymeActing { get { return proportionEnymeActing;  } }
+        public double FractionMicrobialToSOM { get { return fractionMicrobialToSOM;  } }
 
-        //---------------------------------------------------------------------
-
-        //public string AgeOnlyDisturbanceParms
-        //{
-        //    get {
-        //        return ageOnlyDisturbanceParms;
-        //    }
-        //    set {
-        //        string path = value;
-        //        if (path.Trim(null).Length == 0)
-        //            throw new InputValueException(path,"\"{0}\" is not a valid path.",path);
-        //        ageOnlyDisturbanceParms = value;
-        //    }
-        //}
 
         //---------------------------------------------------------------------
         public string SoilDepthMapName
@@ -690,106 +646,6 @@ namespace Landis.Extension.Succession.NECN
             }
         }
         //---------------------------------------------------------------------
-
-        //public string InitialSOM1CSoilMapName
-        //{
-        //    get
-        //    {
-        //        return initialSOM1CSoilMapName;
-        //    }
-        //    set
-        //    {
-        //        string path = value;
-        //        if (path.Trim(null).Length == 0)
-        //            throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-        //        initialSOM1CSoilMapName = value;
-        //    }
-        //}
-
-        ////---------------------------------------------------------------------
-
-        //public string InitialSOM1NSoilMapName
-        //{
-        //    get
-        //    {
-        //        return initialSOM1NSoilMapName;
-        //    }
-        //    set
-        //    {
-        //        string path = value;
-        //        if (path.Trim(null).Length == 0)
-        //            throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-        //        initialSOM1NSoilMapName = value;
-        //    }
-        //}
-        //---------------------------------------------------------------------
-
-        //public string InitialSOM2CMapName
-        //{
-        //    get
-        //    {
-        //        return initialSOM2CMapName;
-        //    }
-        //    set
-        //    {
-        //        string path = value;
-        //        if (path.Trim(null).Length == 0)
-        //            throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-        //        initialSOM2CMapName = value;
-        //    }
-        //}
-
-        ////---------------------------------------------------------------------
-
-        //public string InitialSOM2NMapName
-        //{
-        //    get
-        //    {
-        //        return initialSOM2NMapName;
-        //    }
-        //    set
-        //    {
-        //        string path = value;
-        //        if (path.Trim(null).Length == 0)
-        //            throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-        //        initialSOM2NMapName = value;
-        //    }
-        //}
-        ////---------------------------------------------------------------------
-
-        //public string InitialSOM3CMapName
-        //{
-        //    get
-        //    {
-        //        return initialSOM3CMapName;
-        //    }
-        //    set
-        //    {
-        //        string path = value;
-        //        if (path.Trim(null).Length == 0)
-        //            throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-        //        initialSOM3CMapName = value;
-        //    }
-        //}
-
-        ////---------------------------------------------------------------------
-
-        //public string InitialSOM3NMapName
-        //{
-        //    get
-        //    {
-        //        return initialSOM3NMapName;
-        //    }
-        //    set
-        //    {
-        //        string path = value;
-        //        if (path.Trim(null).Length == 0)
-        //            throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-        //        initialSOM3NMapName = value;
-        //    }
-        //}
-        //---------------------------------------------------------------------
-
         public string InitialDeadSurfaceMapName
         {
             get
@@ -844,14 +700,6 @@ namespace Landis.Extension.Succession.NECN
             Debug.Assert(species != null);
             sppFunctionalType[species] = CheckBiomassParm(newValue, 0, 100);
         }
-        //---------------------------------------------------------------------
-
-        //public void SetNFixer(ISpecies           species,
-        //                             InputValue<int> newValue)
-        //{
-        //    Debug.Assert(species != null);
-        //    nTolerance[species] = CheckBiomassParm(newValue, 1, 4);
-        //}
 
         //---------------------------------------------------------------------
 
@@ -996,30 +844,8 @@ namespace Landis.Extension.Succession.NECN
         //---------------------------------------------------------------------
         public void SetLatitude(InputValue<double> newValue)
         {
-            //Debug.Assert(ecoregion != null);
             latitude = CheckBiomassParm(newValue, 0.0, 50.0);
         }
-        //---------------------------------------------------------------------
-       
-        //public void SetDecayRateSurf(InputValue<double> newValue)
-        //{
-        //    decayRateSurf = CheckBiomassParm(newValue, 0.0, 10.0);
-        //}
-        //---------------------------------------------------------------------
-        //public void SetDecayRateSOM1(InputValue<double> newValue)
-        //{
-        //    decayRateSOM1 = CheckBiomassParm(newValue, 0.0, 10.0);
-        //}
-        //---------------------------------------------------------------------
-        //public void SetDecayRateSOM2(InputValue<double> newValue)
-        //{
-        //    decayRateSOM2 = CheckBiomassParm(newValue, 0.0, 1.0);
-        //}
-        ////---------------------------------------------------------------------
-        //public void SetDecayRateSOM3(InputValue<double> newValue)
-        //{
-        //    decayRateSOM3 = CheckBiomassParm(newValue, 0.0, 1.0);
-        //}
         //---------------------------------------------------------------------
         public void SetDenitrif(InputValue<double> newValue)
         {
@@ -1045,6 +871,36 @@ namespace Landis.Extension.Succession.NECN
         public void SetFractionDOC(InputValue<double> newValue)
         {
             fractionLitterDecayToDOC = CheckBiomassParm(newValue, 0.0, 1.0);
+        }
+        //---------------------------------------------------------------------
+        public void SetMicrobialTurnoverRate(InputValue<double> newValue)
+        {
+            microbialTurnoverRate = CheckBiomassParm(newValue, 0.0, 1.0);
+        }
+        //---------------------------------------------------------------------
+        public void SetFractionUnprotectedSOM(InputValue<double> newValue)
+        {
+            fractionUnprotectedSOM = CheckBiomassParm(newValue, 0.0, 1.0);
+        }
+        //---------------------------------------------------------------------
+        public void SetEnzymeTurnoverRate(InputValue<double> newValue)
+        {
+            enzymeTurnoverRate = CheckBiomassParm(newValue, 0.0, 1.0);
+        }
+        //---------------------------------------------------------------------
+        public void SetCarbonUseEfficiency(InputValue<double> newValue)
+        {
+            carbonUseEfficiency = CheckBiomassParm(newValue, 0.0, 1.0);
+        }
+        //---------------------------------------------------------------------
+        public void SetProportionEnzymeActing(InputValue<double> newValue)
+        {
+            proportionEnymeActing = CheckBiomassParm(newValue, 0.0, 1.0);
+        }
+        //---------------------------------------------------------------------
+        public void SetFractionMicrobialToSOM(InputValue<double> newValue)
+        {
+            fractionMicrobialToSOM = CheckBiomassParm(newValue, 0.0, 1.0);
         }
         //---------------------------------------------------------------------
 
@@ -1078,10 +934,6 @@ namespace Landis.Extension.Succession.NECN
 
             maximumShadeLAI = new double[6];
 
-            //minRelativeBiomass = new Ecoregions.AuxParm<Percentage>[6];
-            //for (byte shadeClass = 1; shadeClass <= 5; shadeClass++) {
-            //    minRelativeBiomass[shadeClass] = new Ecoregions.AuxParm<Percentage>(ecoregionDataset);
-            //}
             sufficientLight         = new List<ISufficientLight>();
 
         }
@@ -1114,28 +966,6 @@ namespace Landis.Extension.Succession.NECN
             }
             return newValue.Actual;
         }
-        //---------------------------------------------------------------------
-
-        //private Ecoregions.AuxParm<T> ConvertToActualValues<T>(Ecoregions.AuxParm<InputValue<T>> inputValues)
-        //{
-        //    Ecoregions.AuxParm<T> actualValues = new Ecoregions.AuxParm<T>(PlugIn.ModelCore.Ecoregions); //ecoregionDataset);
-        //    foreach (IEcoregion ecoregion in PlugIn.ModelCore.Ecoregions)//ecoregionDataset)
-        //        if (inputValues[ecoregion] != null)
-        //            actualValues[ecoregion] = inputValues[ecoregion].Actual;
-        //    return actualValues;
-        //}
-
-        //---------------------------------------------------------------------
-
-        //private Landis.Library.Parameters.Species.AuxParm<T> ConvertToActualValues<T>(Species.AuxParm<InputValue<T>> inputValues)
-        //{
-        //    Species.AuxParm<T> actualValues = new Species.AuxParm<T>(PlugIn.ModelCore.Species);//speciesDataset);
-        //    foreach (ISpecies species in PlugIn.ModelCore.Species)//speciesDataset)
-        //        if (inputValues[species] != null)
-        //            actualValues[species] = inputValues[species].Actual;
-        //    return actualValues;
-        //}
-
         //---------------------------------------------------------------------
 
         private void ValidatePath(string path)

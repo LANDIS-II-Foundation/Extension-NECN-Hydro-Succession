@@ -201,43 +201,53 @@ namespace Landis.Extension.Succession.NECN
             }
         }
 
-        // used defaults from Abramoff et al. NOTE:  p[n] indicates the field from the prior csv input file.
+        // Moved to Input file for calibration
+        private static double r_death = PlugIn.Parameters.MicrobialTurnoverRate;
+        private static double frac = PlugIn.Parameters.FractionUnprotectedSOM;
+        private static double r_ecloss = PlugIn.Parameters.EnzymeTurnoverRate;
+        private static double c_use_efficiency = PlugIn.Parameters.CarbonUseEfficiency;
+        private static double p_enz_SOC = PlugIn.Parameters.ProportionEnzymeActing;
+        private static double mic_to_som = PlugIn.Parameters.FractionMicrobialToSOM;
+
+        // Constants 
+        // defaults from Abramoff et al. NOTE:  p[n] indicates the field from the R-code csv input file.
         private static double ea_dep = 64.3413501543551;        //p[1]  #activation energy of SOM depolymerization
         private static double ea_upt = 60.2613470377852;        //p[2]  #activation energy of DOC uptake
         private static double a_dep = 1.0559E+11;         //p[3]   #pre-exponential constant for SOM depolymerization
         private static double a_upt = 1.0794E+11;         //p[4]  #pre-exponential constant for uptake
-        //private static double frac = 0.000378981;          //p[5]  #fraction of unprotected SOM, Magill et al. 2000
-        private static double frac = 0.00014;          //p[5]  #fraction of unprotected SOM, Vogel
-                                                           // p[6] 0.000466501;  NOT USED
-                                                           // p[7] 0.000486085;  NOT USED
-        //private static double cn_litter = 48.81375915;     //p[8] #C:N of litter (was: cnl) [Not used]
-        public static double CN_DOCN = 27.6;         //p[9] #C:N of soil (was: cns)  // Rob: only used for initializing DON
-        //private static double cn_microbial = 9.803885526;  //p[10] #C:N of microbial biomass (was: cnm)
-        private static double cn_microbial = 13;  //p[10] #C:N of microbial biomass, Vogel
-        private static double cn_enzymes = 3;    //p[11] #C:N of enzymes (was: cne)
         private static double km_dep = 0.00246766722424667;        //p[12] #half-saturation constant for SOM depolymerization
         private static double km_upt = 0.289955018042339;        //p[13] #half-saturation constant for DOC uptake
-        private static double r_ecloss = 0.000988870450524585;       //p[14] #enzyme turnover rate
-
-        //private static double r_death = 0.000150496216739791;       //p[15] #microbial turnover rate
-        private static double r_death = 0.00150496216739791;       //p[15] #microbial turnover rate
-
-        private static double c_use_efficiency = 0.31;           //p[16] #carbon use efficiency (was: cue)
-        private static double p_enz_SOC = 0.508531920004333;      //p[17] #proportion of enzyme pool acting on SOC (was: a)
         private static double pconst = 0.481045148509146;        //p[18] #proportion of assimilated C allocated to enzyme production
         private static double qconst = 0.49101177927437;        //p[19] #proportion of assimilated N allocated to enzyme production
-        private static double mic_to_som = 0.493381458516761;    //p[20] #fraction of dead microbial biomass allocated to SOM
         private static double km_o2 = 0.115473482406968;         //p[21] #Michaelis constant for O2
         private static double dgas = 1.63155073368955;          //p[22] #diffusion coefficient for O2 in air
         private static double dliq = 3.13540523153298;          //p[23] #diffusion coefficient for unprotected SOM and DOM in liquid
         private static double o2airfrac = 0.202587071980532;     //p[24] #volume fraction of O2 in air
+        private static double saturation = 0.5;     //p[29] #saturation level (was: sat)
+        public static double r = 0.008314;                 // gas constant
+
+        // CN Ratios
+        public static double CN_DOCN = 27.6;         //p[9] #C:N of soil (was: cns)  // Rob: only used for initializing DON
+        private static double cn_microbial = 13;  //p[10] #C:N of microbial biomass, Vogel
+        private static double cn_enzymes = 3;    //p[11] #C:N of enzymes (was: cne)
+
+        //private static double frac = 0.000378981;          //p[5]  #fraction of unprotected SOM, Magill et al. 2000
+        //private static double frac = 0.00014;          //p[5]  #fraction of unprotected SOM, Vogel
+        // p[6] 0.000466501;  NOT USED
+        // p[7] 0.000486085;  NOT USED
+        //private static double cn_litter = 48.81375915;     //p[8] #C:N of litter (was: cnl) [Not used]
+        //private static double cn_microbial = 9.803885526;  //p[10] #C:N of microbial biomass (was: cnm)
+        //private static double r_ecloss = 0.000988870450524585;       //p[14] #enzyme turnover rate
+        //private static double r_death = 0.000150496216739791;       //p[15] #microbial turnover rate
+        //private static double r_death = 0.00150496216739791;       //p[15] #microbial turnover rate
+        //private static double c_use_efficiency = 0.31;           //p[16] #carbon use efficiency (was: cue)
+        //private static double p_enz_SOC = 0.508531920004333;      //p[17] #proportion of enzyme pool acting on SOC (was: a)
+        //private static double mic_to_som = 0.493381458516761;    //p[20] #fraction of dead microbial biomass allocated to SOM
         //private double bulk_density = 0.75743956;         //p[25] #bulk density (was: bd)
         //private double particle_density = 2.50156948;     //p[26] #particle density (was: pd)
         //private static double soilMoistureA = -1.92593874;  //p[27]
         //private static double soilMoistureA = 0.0001;  //p[27]
         //private static double soilMoistureB = 1.0;  //p[28]                     
-        private static double saturation = 0.5;     //p[29] #saturation level (was: sat)
-        public static double r = 0.008314;                 // gas constant
 
 
         public static void Decompose(int Year, int Month, ActiveSite site)

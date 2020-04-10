@@ -255,15 +255,17 @@ namespace Landis.Extension.Succession.NECN
 
             double month_to_hours =  24.0 * (double) AnnualClimate.DaysInMonth(Month, Year);
             double mg_to_g = 1000;
+            double m2_to_cm2 = 10000;
+            double g_to_mg = 1000;
 
             double SoilT = SiteVars.SoilTemperature[site];
             double SoilMoisture = SiteVars.SoilWaterContent[site];  //ML: This may be a volume of water while DAMM wants a VSWC
             double bulk_density = SiteVars.SoilBulkDensity[site];
             double particle_density = SiteVars.SoilParticleDensity[site];
 
-            double LitterCinput = (SiteVars.SoilPrimary[site].MonthlyCarbonInputs * 0.5) / month_to_hours * mg_to_g;
-            double LitterNinput = SiteVars.SoilPrimary[site].MonthlyNitrogenInputs / month_to_hours * mg_to_g;
-            double DOCinput = (SiteVars.SoilPrimary[site].MonthlyCarbonInputs * 0.5) / month_to_hours * mg_to_g;
+            double LitterCinput = (SiteVars.SoilPrimary[site].MonthlyCarbonInputs * 0.5) * g_to_mg / (m2_to_cm2 * month_to_hours);
+            double LitterNinput = SiteVars.SoilPrimary[site].MonthlyNitrogenInputs  * g_to_mg / (m2_to_cm2 * month_to_hours);
+            double DOCinput = (SiteVars.SoilPrimary[site].MonthlyCarbonInputs * 0.5) * g_to_mg / (m2_to_cm2 * month_to_hours);
             double c_loss = 0.0;
 
             //PlugIn.ModelCore.UI.WriteLine(" SoilLayer:  Month={0}, SoilT={1:0.00}, SoilMoisture={2:0.00}, LitterC={3:0.00}, LitterN={4:0.00}", Month, SoilT, SoilMoisture, LitterCinput, LitterNinput);
@@ -275,16 +277,16 @@ namespace Landis.Extension.Succession.NECN
             //double t = 1.0;
             // double DOC_input = dref + A1 * Math.Sin(w1 * t - Math.PI / 2);  // # mg C cm-3 soil 
 
-            for (int hours = 0; hours < month_to_hours; hours++)
-            {
+            //for (int hours = 0; hours < month_to_hours; hours++)
+            //{
 
-                double SOC = SiteVars.SoilPrimary[site].Carbon * mg_to_g;
-                double SON = SiteVars.SoilPrimary[site].Nitrogen * mg_to_g;
-                double DOC = SiteVars.SoilPrimary[site].DOC * mg_to_g;
-                double DON = SiteVars.SoilPrimary[site].DON * mg_to_g;
-                double microbial_C = SiteVars.SoilPrimary[site].MicrobialCarbon * mg_to_g;
-                double microbial_N = SiteVars.SoilPrimary[site].MicrobialNitrogen * mg_to_g;
-                double enzymatic_concentration = SiteVars.SoilPrimary[site].EnzymaticConcentration * mg_to_g;
+                double SOC = SiteVars.SoilPrimary[site].Carbon * g_to_mg / m2_to_cm2;
+                double SON = SiteVars.SoilPrimary[site].Nitrogen * g_to_mg / m2_to_cm2;
+                double DOC = SiteVars.SoilPrimary[site].DOC * g_to_mg / m2_to_cm2;
+                double DON = SiteVars.SoilPrimary[site].DON * g_to_mg / m2_to_cm2;
+                double microbial_C = SiteVars.SoilPrimary[site].MicrobialCarbon * g_to_mg / m2_to_cm2;
+                double microbial_N = SiteVars.SoilPrimary[site].MicrobialNitrogen * g_to_mg / m2_to_cm2;
+                double enzymatic_concentration = SiteVars.SoilPrimary[site].EnzymaticConcentration * g_to_mg / m2_to_cm2;
 
                 //PlugIn.ModelCore.UI.WriteLine(" Initial:  Month={0}, SOC={1:0.0}, SON:{2:0.0}, DOC={3:0.0}, DON={4:0.0}, MicC={5:0.0}, MicN={6:0.0}, EC={7:0.0}", Month, SOC, SON, DOC, DON, microbial_C, microbial_N, enzymatic_concentration);
                 //double cn_microbial = microbial_C / microbial_N;
@@ -334,18 +336,26 @@ namespace Landis.Extension.Succession.NECN
                 double ddoc = DOCinput + decom_c + (death_c * (1.0 - mic_to_som)) + (cn_enzymes * eloss) - upt_c; //calculate change in DOC pool
                 double ddon = (DOCinput / (DOC / DON)) + decom_n + (death_n * (1.0 - mic_to_som)) + eloss - upt_n; //calculate change in DON pool
 
-                SiteVars.SoilPrimary[site].Carbon += dsoc / mg_to_g;
-                SiteVars.SoilPrimary[site].Nitrogen += dson / mg_to_g;
-                SiteVars.SoilPrimary[site].DOC = Math.Max(SiteVars.SoilPrimary[site].DOC + (ddoc / mg_to_g), 0.001);
-                SiteVars.SoilPrimary[site].DON = Math.Max(SiteVars.SoilPrimary[site].DON + (ddon / mg_to_g), 0.0001);
-                SiteVars.SoilPrimary[site].MicrobialCarbon += dmic_c / mg_to_g;
-                SiteVars.SoilPrimary[site].MicrobialNitrogen += dmic_n / mg_to_g;
-                SiteVars.SoilPrimary[site].EnzymaticConcentration += dec / mg_to_g;
+            // convert Rose's results to Landis units
+            dsoc *= month_to_hours * m2_to_cm2 / (g_to_mg);
+            dson *= month_to_hours * m2_to_cm2 / (g_to_mg);
+            ddoc *= month_to_hours * m2_to_cm2 / (g_to_mg);
+            ddon *= month_to_hours * m2_to_cm2 / (g_to_mg);
 
-                //double dcout = cmin + overflow;                                             //calculate C efflux
 
-                c_loss += (c_mineralization + overflow) / mg_to_g; //calculate C efflux
-            }
+            SiteVars.SoilPrimary[site].Carbon += dsoc;
+            SiteVars.SoilPrimary[site].Nitrogen += dson;
+            SiteVars.SoilPrimary[site].DOC = Math.Max(SiteVars.SoilPrimary[site].DOC + (ddoc), 0.001);
+            SiteVars.SoilPrimary[site].DON = Math.Max(SiteVars.SoilPrimary[site].DON + (ddon), 0.0001);
+            SiteVars.SoilPrimary[site].MicrobialCarbon += dmic_c;
+            SiteVars.SoilPrimary[site].MicrobialNitrogen += dmic_n;
+            SiteVars.SoilPrimary[site].EnzymaticConcentration += dec;
+
+            c_loss += (c_mineralization + overflow); //calculate C efflux
+            SiteVars.MineralN[site] += nmin;  
+
+            //double dcout = cmin + overflow;                                             //calculate C efflux
+            //}
 
             SiteVars.SoilPrimary[site].Respiration(c_loss, site);  // RMS: 11-13-2019: This causes negative mineral N.  
 
@@ -394,7 +404,7 @@ namespace Landis.Extension.Succession.NECN
             // 12/26/2019: Commented out N dynamics below... creates surge in mineral N.
             //double mineralNFlow = co2loss * this.Nitrogen / this.Carbon;
 
-            //if (mineralNFlow > this.Nitrogen)
+            //if (nmin > this.Nitrogen)
             //{
             //    //if((mineralNFlow - this.Nitrogen) > 0.01)
             //    //{
@@ -403,7 +413,7 @@ namespace Landis.Extension.Succession.NECN
             //    //    PlugIn.ModelCore.UI.WriteLine("  CO2 loss={0:0.000}, this.Carbon={0:0.000}", co2loss, this.Carbon);
             //    //    PlugIn.ModelCore.UI.WriteLine("  Site R/C: {0}/{1}.", site.Location.Row, site.Location.Column);
             //    //}
-            //    mineralNFlow = this.Nitrogen;
+            //    nmin = this.Nitrogen;
             //    co2loss = this.Carbon;
             //}
 
@@ -416,7 +426,7 @@ namespace Landis.Extension.Succession.NECN
             //Add lost CO2 to monthly heterotrophic respiration
             SiteVars.MonthlyResp[site][Main.Month] += co2loss;
 
-            //SiteVars.MineralN[site] += mineralNFlow;  // 12/26/2019: Causes surge of Mineral N
+            //SiteVars.MineralN[site] += nmin;  // 12/26/2019: Causes surge of Mineral N
 
             return;
         }

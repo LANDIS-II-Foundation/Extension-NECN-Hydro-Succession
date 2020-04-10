@@ -35,8 +35,8 @@ InitialFineFuels		0.1
 AtmosphericNSlope		0.0001
 AtmosphericNIntercept		0.259
 Latitude			35.5
-DenitrificationRate		0.01
-FractionLitterToDOC		0.05  << some fraction of litter goes immediately to DOC
+DenitrificationRate		0.01 << Calibration target
+FractionLitterToDOC		0.05  << some fraction of litter goes immediately to DOC << Calibration target
 MicrobialTurnoverRate		0.00150496216739791  << Calibration target
 FractionUnprotectedSOM		0.00014 << Calibration target
 EnzymeTurnoverRate		0.000988870450524585  << Calibration target

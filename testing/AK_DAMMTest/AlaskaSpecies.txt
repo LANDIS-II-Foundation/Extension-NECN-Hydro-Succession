@@ -1,0 +1,26 @@
+LandisData	Species		
+					
+
+>>				Sexual	Shade	Fire	Seed Disp Dist	Veg	Sprout	Age	Post-Fire
+>>	Name		Long	Maturit	Tol.	Tol.	Effecti	Maximum	Rep P	Min	Max	Regen
+>>	----		-------	-----	-----	----	------  -------	-----	----	-----	--------
+	BlackSpruce		200	30	4	1	20	60	0	0	0	serotiny
+	WhiteSpruce		250	30	3	2	60	400	0	0	0	none
+	PaperBirch		200	15	2	1	60	200	0.6	1	75	resprout
+	QuakingAspen 	200	10	1	1	500	5000	0.9	1	200	resprout
+	Tamarack		180	15	1	1	63	200	0	0	0	none
+	Willow			70	2	2	2	50	5000	0.9	1	70	resprout
+	Alder			70	4	3	2	50	100	0.6	1	70	resprout
+	BalsamPoplar	200	8	1	3	200	3000	0.8	1	200	resprout
+	LabradorTea		30	3	3	2	10	50	0.6	0	30	resprout
+	Vaccinium		200	3	4	2	1500	5000	0.9	0	200	resprout	
+	Grass			200	1	3	1	50	100	0.8	0	200	resprout
+	MossLichen		100	2	3	1	4	20	0.9	0	100	none  <<wouldn't accept 0.5 for ESD so went with 4
+>>	DwarfBirch
+>>	Menziesia
+>>	Rubus
+>>	Rose
+>>	Ribes
+>>	Buffaloberry
+>>	Viburnum
+>>	Arctostaphylos	

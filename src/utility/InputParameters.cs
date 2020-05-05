@@ -844,7 +844,7 @@ namespace Landis.Extension.Succession.NECN
         //---------------------------------------------------------------------
         public void SetLatitude(InputValue<double> newValue)
         {
-            latitude = CheckBiomassParm(newValue, 0.0, 50.0);
+            latitude = CheckBiomassParm(newValue, 0.0, 80.0);
         }
         //---------------------------------------------------------------------
         public void SetDenitrif(InputValue<double> newValue)

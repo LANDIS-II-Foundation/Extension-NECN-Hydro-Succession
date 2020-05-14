@@ -33,10 +33,10 @@ namespace Landis.Extension.Succession.NECN
                        
         // Soil layers
         //private static ISiteVar<Layer> som1surface;
-        private static ISiteVar<SoilLayer> soilPrimary;
+        private static ISiteVar<DAMMLayer> oHorizon;
         //private static ISiteVar<Layer> dissolved_organic;
         //private static ISiteVar<Layer> som2;
-        //private static ISiteVar<Layer> som3;
+        private static ISiteVar<Layer> mineralSoil;
         private static ISiteVar<int> soilDepth;
         private static ISiteVar<double> soilDrain;
         private static ISiteVar<double> soilBaseFlowFraction;
@@ -126,16 +126,17 @@ namespace Landis.Extension.Succession.NECN
             surfaceDeadWood     = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             soilDeadWood        = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             
+            // Leaf Litter:
             surfaceStructural   = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             surfaceMetabolic    = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             soilStructural      = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             soilMetabolic       = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
 
-            // Soil Layers
+            // Soil Layers:
             //som1surface         = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             //som2                = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
-            //som3                = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
-            soilPrimary = PlugIn.ModelCore.Landscape.NewSiteVar<SoilLayer>();
+            mineralSoil                = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
+            oHorizon = PlugIn.ModelCore.Landscape.NewSiteVar<DAMMLayer>();
             soilDepth = PlugIn.ModelCore.Landscape.NewSiteVar<int>();
             soilDrain           = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             soilBaseFlowFraction = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
@@ -222,10 +223,10 @@ namespace Landis.Extension.Succession.NECN
                 surfaceMetabolic[site]      = new Layer(LayerName.Metabolic, LayerType.Surface);
                 soilStructural[site]        = new Layer(LayerName.Structural, LayerType.Soil);
                 soilMetabolic[site]         = new Layer(LayerName.Metabolic, LayerType.Soil);
-                soilPrimary[site] = new SoilLayer(SoilName.Primary); //, LayerType.Soil);
+                oHorizon[site]              = new DAMMLayer(); //, LayerType.Soil);
                 //som1surface[site]           = new Layer(LayerName.SOM1, LayerType.Surface);
                 //som2[site]                  = new Layer(LayerName.SOM2, LayerType.Soil);
-                //som3[site]                  = new Layer(LayerName.SOM3, LayerType.Soil);
+                mineralSoil[site]                  = new Layer(LayerName.Mineral, LayerType.Soil);
 
                 stream[site]                = new Layer(LayerName.Other, LayerType.Other);
                 sourceSink[site]            = new Layer(LayerName.Other, LayerType.Other);
@@ -443,10 +444,10 @@ namespace Landis.Extension.Succession.NECN
         /// <summary>
         /// The Primary soil.
         /// </summary>
-        public static ISiteVar<SoilLayer> SoilPrimary
+        public static ISiteVar<DAMMLayer> OHorizon
         {
             get {
-                return soilPrimary;
+                return oHorizon;
             }
         }
         //---------------------------------------------------------------------
@@ -465,12 +466,13 @@ namespace Landis.Extension.Succession.NECN
         /// <summary>
         /// The soil organic matter (SOM3) for the landscape's sites.
         /// </summary>
-        //public static ISiteVar<Layer> SOM3
-        //{
-        //    get {
-        //        return som3;
-        //    }
-        //}
+        public static ISiteVar<Layer> MineralSoil
+        {
+            get
+            {
+                return mineralSoil;
+            }
+        }
         public static ISiteVar<int> SoilDepth {get{return soilDepth;}}
         public static ISiteVar<double> SoilDrain { get { return soilDrain; } }
         public static ISiteVar<double> SoilBaseFlowFraction { get { return soilBaseFlowFraction; } }

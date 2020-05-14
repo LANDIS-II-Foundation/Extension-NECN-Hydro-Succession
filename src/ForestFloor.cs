@@ -50,7 +50,11 @@ namespace Landis.Extension.Succession.NECN
             if(foliarBiomass > 0)
             {
                 SiteVars.LitterfallC[site] += foliarBiomass * 0.47;
-                
+
+                //SiteVars.OHorizon[site].MonthlyCarbonInputs += Math.Round(foliarBiomass * 0.47, 2);
+                //SiteVars.OHorizon[site].MonthlyCarbonInputs += Math.Round(foliarBiomass * 0.47 / SpeciesData.LeafCN[species], 2);
+
+
                 LitterLayer.PartitionResidue(
                             foliarBiomass,
                             inputDecayValue,
@@ -78,6 +82,8 @@ namespace Landis.Extension.Succession.NECN
             if (foliarBiomass > 0)
             {
                 SiteVars.LitterfallC[site] += foliarBiomass * 0.47;
+                //SiteVars.OHorizon[site].MonthlyCarbonInputs += Math.Round(foliarBiomass * 0.47, 2);
+                //SiteVars.OHorizon[site].MonthlyCarbonInputs += Math.Round(foliarBiomass * 0.47 / SpeciesData.LeafCN[species], 2);
 
                 LitterLayer.PartitionResidue(
                             foliarBiomass,

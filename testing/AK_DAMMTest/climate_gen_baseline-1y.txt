@@ -1,0 +1,14 @@
+LandisData "Climate Config"				
+		
+ClimateTimeSeries			Daily_SequencedYears
+ClimateFile				ncar_climate_formatted_1970_2010_fakewind_1Eco.csv
+ClimateFileFormat			Daily_Temp-K_Precip-mmDay
+
+SpinUpClimateTimeSeries			Daily_SequencedYears
+SpinUpClimateFile			ncar_climate_formatted_1970_2010_fakewind_1Eco.csv
+SpinUpClimateFileFormat			Daily_Temp-K_Precip-mmDay
+
+AtmPressure				100
+UsingFireClimate			yes
+SpringStart				30
+WinterStart 				320

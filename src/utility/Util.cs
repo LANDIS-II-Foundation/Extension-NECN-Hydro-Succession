@@ -359,7 +359,7 @@ namespace Landis.Extension.Succession.NECN
                             throw new InputValueException(mapValue.ToString(),
                                                           "SOC value {0} is not between {1:0.0} and {2:0.0}. Site_Row={3:0}, Site_Column={4:0}",
                                                           mapValue, 1.0, 10000.0, site.Location.Row, site.Location.Column);
-                        SiteVars.SoilPrimary[site].Carbon = mapValue;
+                        SiteVars.OHorizon[site].Carbon = mapValue;
                     }
                 }
             }
@@ -379,7 +379,7 @@ namespace Landis.Extension.Succession.NECN
                             throw new InputValueException(mapValue.ToString(),
                                                           "SON value {0} is not between {1:0.0} and {2:0.0}. Site_Row={3:0}, Site_Column={4:0}",
                                                           mapValue, 0.0, 500.0, site.Location.Row, site.Location.Column);
-                        SiteVars.SoilPrimary[site].Nitrogen = mapValue;
+                        SiteVars.OHorizon[site].Nitrogen = mapValue;
                     }
                 }
             }
@@ -387,9 +387,9 @@ namespace Landis.Extension.Succession.NECN
             // Initialize other components:
             foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
             {
-                SiteVars.SoilPrimary[site].EnzymaticConcentration = 0.001;
-                SiteVars.SoilPrimary[site].MicrobialCarbon = 0.00001;
-                SiteVars.SoilPrimary[site].MicrobialNitrogen = 0.000001;
+                SiteVars.OHorizon[site].EnzymaticConcentration = 0.001;
+                SiteVars.OHorizon[site].MicrobialCarbon = 0.00001;
+                SiteVars.OHorizon[site].MicrobialNitrogen = 0.000001;
             }
         }
         ////---------------------------------------------------------------------
@@ -441,7 +441,7 @@ namespace Landis.Extension.Succession.NECN
                         SiteVars.SoilStructural[site].Carbon = SiteVars.SurfaceDeadWood[site].Carbon * 0.85 * PlugIn.Parameters.InitialFineFuels;
                         SiteVars.SoilStructural[site].Nitrogen = SiteVars.SoilStructural[site].Carbon / OtherData.StructuralCN;
                         SiteVars.SoilMetabolic[site].Carbon = SiteVars.SurfaceDeadWood[site].Carbon * 0.15 * PlugIn.Parameters.InitialFineFuels;
-                        SiteVars.SoilMetabolic[site].Nitrogen = SiteVars.SoilMetabolic[site].Carbon / 10;  // a generic metabolic CN ratio
+                        SiteVars.SoilMetabolic[site].Nitrogen = SiteVars.SoilMetabolic[site].Carbon / 10.0;  // a generic metabolic CN ratio
 
                     }
                 }

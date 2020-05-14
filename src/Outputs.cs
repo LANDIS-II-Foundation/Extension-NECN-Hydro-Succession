@@ -243,7 +243,7 @@ namespace Landis.Extension.Succession.NECN
                 avgSoilMetaC[ecoregion.Index] += SiteVars.SoilMetabolic[site].Carbon;
 
                 //avgSOM1surfC[ecoregion.Index] += SiteVars.SOM1surface[site].Carbon;
-                avgSoilPrimaryC[ecoregion.Index] += SiteVars.SoilPrimary[site].Carbon;
+                avgSoilPrimaryC[ecoregion.Index] += SiteVars.OHorizon[site].Carbon;
                 //avgSOM2C[ecoregion.Index] += SiteVars.SOM2[site].Carbon;
                 //avgSOM3C[ecoregion.Index] += SiteVars.SOM3[site].Carbon;
 
@@ -260,7 +260,7 @@ namespace Landis.Extension.Succession.NECN
                 avgSoilMetaN[ecoregion.Index] += SiteVars.SoilMetabolic[site].Nitrogen;
 
                 //avgSOM1surfN[ecoregion.Index] += SiteVars.SOM1surface[site].Nitrogen;
-                avgSoilPrimaryN[ecoregion.Index] += SiteVars.SoilPrimary[site].Nitrogen;
+                avgSoilPrimaryN[ecoregion.Index] += SiteVars.OHorizon[site].Nitrogen;
                 //avgSOM2N[ecoregion.Index] += SiteVars.SOM2[site].Nitrogen;
                 //avgSOM3N[ecoregion.Index] += SiteVars.SOM3[site].Nitrogen;
                 avgTotalSoilN[ecoregion.Index] += GetTotalSoilNitrogen(site);
@@ -748,7 +748,7 @@ namespace Landis.Extension.Succession.NECN
                     + SiteVars.SoilMetabolic[site].Nitrogen
 
                     //+ SiteVars.SOM1surface[site].Nitrogen
-                    + SiteVars.SoilPrimary[site].Nitrogen
+                    + SiteVars.OHorizon[site].Nitrogen
                     //+ SiteVars.SOM2[site].Nitrogen
                     //+ SiteVars.SOM3[site].Nitrogen
                     ;
@@ -773,7 +773,7 @@ namespace Landis.Extension.Succession.NECN
             +SiteVars.SoilMetabolic[site].Nitrogen
 
             //+ SiteVars.SOM1surface[site].Nitrogen
-            + SiteVars.SoilPrimary[site].Nitrogen
+            + SiteVars.OHorizon[site].Nitrogen
             //+ SiteVars.SOM2[site].Nitrogen
             //+ SiteVars.SOM3[site].Nitrogen;
                     ;
@@ -786,9 +786,9 @@ namespace Landis.Extension.Succession.NECN
             double totalC = 
                     
                     //SiteVars.SOM1surface[site].Carbon
-                    SiteVars.SoilPrimary[site].Carbon
-                    + SiteVars.SoilPrimary[site].DOC
-                    + SiteVars.SoilPrimary[site].MicrobialCarbon
+                    SiteVars.OHorizon[site].Carbon
+                    + SiteVars.OHorizon[site].DOC
+                    + SiteVars.OHorizon[site].MicrobialCarbon
                     //+ SiteVars.SOM2[site].Carbon
                     //+ SiteVars.SOM3[site].Carbon
                     ;

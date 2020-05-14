@@ -34,7 +34,8 @@ namespace Landis.Extension.Succession.NECN
                 //Compute total C flow out of large wood
                 double totalCFlow = wood2c * decayRate;
 
-                //PlugIn.ModelCore.UI.WriteLine("Decompose wood.  C={0:0.00}, Cflow={1:0.00}, DecayRate={2:0.000}.", wood2c, totalCFlow, decayRate);
+                if(PlugIn.Verbose)
+                PlugIn.ModelCore.UI.WriteLine("Decompose LARGE wood.  C={0:0.00}, Cflow={1:0.00}, DecayRate={2:0.000}.", wood2c, totalCFlow, decayRate);
 
                 // Decompose large wood into SOM1 and SOM2 with CO2 loss.
                 SiteVars.SurfaceDeadWood[site].DecomposeLignin(totalCFlow, site);
@@ -57,7 +58,8 @@ namespace Landis.Extension.Succession.NECN
 
 
 
-                //PlugIn.ModelCore.UI.WriteLine("  Coarse Root={0:0.0}, CFlow={1:0.00}, DecayFactor={2:0.00}, DecayValue={3:0.0}, ligninEffect={4:0.00}, anerb={5:0.00}.", wood3c, totalCFlow, SiteVars.DecayFactor[site], SiteVars.SoilDeadWood[site].DecayValue, ligninEffect, anerb);
+                if (PlugIn.Verbose)
+                    PlugIn.ModelCore.UI.WriteLine("Decompose COARSE roots.  Coarse Root={0:0.0}, CFlow={1:0.00}, DecayFactor={2:0.00}, DecayValue={3:0.0}, ligninEffect={4:0.00}, anerb={5:0.00}.", wood3c, totalCFlow, SiteVars.DecayFactor[site], SiteVars.SoilDeadWood[site].DecayValue, ligninEffect, anerb);
 
                 SiteVars.SoilDeadWood[site].DecomposeLignin(totalCFlow, site);
             }

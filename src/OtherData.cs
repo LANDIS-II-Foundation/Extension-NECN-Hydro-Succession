@@ -117,9 +117,9 @@ namespace Landis.Extension.Succession.NECN
         // Maximum C / N ratio for material entering SOM1.
         // Minimum C / N ratio for material entering SOM1.
         // Amount N present when minimum ratio applies.
-        public const double MaxCNenterSOM1         = 18.0;
-        public const double MinCNenterSOM1         = 8.0;
-        public const double MinContentN_SOM1  = 2.0;
+        public const double MaxCNenterOHorizon         = 18.0;
+        public const double MinCNenterOHorizon         = 8.0;
+        public const double MinContentN_OHorizon  = 2.0;
 
         //// VARAT2(1,1) - Maximum C / N ratio for material entering SOM2.
         //// VARAT2(2,1) - Minimum C / N ratio for material entering SOM2.

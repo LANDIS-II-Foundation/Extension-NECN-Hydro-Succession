@@ -41,15 +41,15 @@ InitialDOC			3.0  <<arbitrary and small
 >>InitialEnzymeConcentration		0.0339
 >>InitialDOCFraction			0.0016669     << DOC is about 0.2% of SOC pool, Kane et al. 2006. This controls the initial amount of DOC.
 >>InitialDONFraction			0.0016669    << Fraction of TON that is DON, wasn't sure so used same as DOC
-DenitrificationRate		0.001  << Calibration target
+DenitrificationRate		0.0 <<01  << Calibration target
 
 FractionLitterToDOC		0.066          << some fraction of litter goes immediately to DOC << Calibration target
-MicrobialTurnoverRate		0.00150496216739791  << Calibration target
-FractionUnprotectedSOM		0.00014 << Calibration target
-EnzymeTurnoverRate		0.000988870450524585  << Calibration target
-CarbonUseEfficiency		0.31 << Calibration target
-ProportionEnymeActing		0.508531920004333  << Calibration target
-FractionMicrobialToSOM		0.493381458516761  << Calibration target
+MicrobialTurnoverRate		0.0001437  << aka 'r_deather': Calibration target
+FractionUnprotectedSOM		0.0004048 << aka 'frac':  Calibration target
+EnzymeTurnoverRate		0.00095780  << aka 'r_ecloss': Calibration target
+CarbonUseEfficiency		0.357329 << aka 'c_use_efficiency':  Calibration target
+ProportionEnymeActing		0.522748  << aka 'p_enz_SOC:  Calibration target
+FractionMicrobialToSOM		0.551334  << aka 'mic_to_som': Calibration target
 
 >>Dispersal parameters
 SeedingAlgorithm  WardSeedDispersal

@@ -86,7 +86,8 @@ namespace Landis.Extension.Succession.NECN
                     ClimateRegionData.MonthlyNDeposition[ecoregion][Month] = monthlyNdeposition;
                     ClimateRegionData.AnnualNDeposition[ecoregion] += monthlyNdeposition;
                     SiteVars.MineralN[site] += monthlyNdeposition;
-                    //PlugIn.ModelCore.UI.WriteLine("Ndeposition={0},MineralN={1:0.00}.", monthlyNdeposition, SiteVars.MineralN[site]);
+                    if(PlugIn.Verbose)
+                        PlugIn.ModelCore.UI.WriteLine("Main:  Ndeposition={0},MineralN={1:0.00}.", monthlyNdeposition, SiteVars.MineralN[site]);
 
                     double liveBiomass = (double) ComputeLivingBiomass(siteCohorts);
                     double baseFlow, stormFlow, AET;
@@ -95,7 +96,7 @@ namespace Landis.Extension.Succession.NECN
                     PlugIn.AnnualWaterBalance += ppt - AET;
 
                     // Calculate N allocation for each cohort
-                    AvailableN.SetMineralNallocation(site);
+                    AvailableN.SetMineralNallocation(site, Month);
 
                     if (MonthCnt==11)
                         siteCohorts.Grow(site, (y == years && isSuccessionTimeStep), true);
@@ -104,7 +105,7 @@ namespace Landis.Extension.Succession.NECN
 
                     WoodLayer.Decompose(site);
                     LitterLayer.Decompose(site);
-                    SoilLayer.Decompose(y, Month, site);
+                    DAMMLayer.Decompose(y, Month, site);
 
                     // Volatilization loss as a function of the mineral N which remains after uptake by plants.  
                     // ML added a correction factor for wetlands since their denitrification rate is double that of wetlands

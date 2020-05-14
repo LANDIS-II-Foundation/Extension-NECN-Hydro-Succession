@@ -149,8 +149,6 @@ namespace Landis.Extension.Succession.NECN
             }
 
             // ...Adjust lignin in Structural Layers
-            // adjlig(strucc(lyr), fracStructuralLignin, cAddToStructural, strlig(lyr));
-
             Layer structuralLayer;
 
             if((int) type == (int) LayerType.Surface)
@@ -184,7 +182,6 @@ namespace Landis.Extension.Succession.NECN
 
             return;
 
-        //}
         }
 
     }

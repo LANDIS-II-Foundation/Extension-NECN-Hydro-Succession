@@ -42,6 +42,7 @@ namespace Landis.Extension.Succession.NECN
         public static int FutureClimateBaseYear;
         private ICommunity initialCommunity;
         //public static int B_MAX;
+        public static bool Verbose = false;
 
         //---------------------------------------------------------------------
 
@@ -218,8 +219,8 @@ namespace Landis.Extension.Succession.NECN
 
             InitialBiomass initialBiomass = InitialBiomass.Compute(site, initialCommunity);
             SiteVars.MineralN[site] = Parameters.InitialMineralN;
-            SiteVars.SoilPrimary[site].DOC = Parameters.InitialDOC;
-            SiteVars.SoilPrimary[site].DON = SiteVars.SoilPrimary[site].DOC / SoilLayer.CN_DOCN;
+            SiteVars.OHorizon[site].DOC = Parameters.InitialDOC;
+            SiteVars.OHorizon[site].DON = SiteVars.OHorizon[site].DOC / DAMMLayer.CN_DOCN;
         }
         //---------------------------------------------------------------------
 

@@ -167,7 +167,7 @@ namespace Landis.Extension.Succession.NECN
 
         // Calculates how much N a cohort gets, based on the amount of N available.
 
-        public static void SetMineralNallocation(Site site)
+        public static void SetMineralNallocation(Site site, int month)
         {
             AvailableN.CohortMineralNallocation = new Dictionary<int, Dictionary<int, double>>();
             
@@ -192,7 +192,7 @@ namespace Landis.Extension.Succession.NECN
                    
                     if (Double.IsNaN(Nallocation) || Double.IsNaN(Nfraction) || Double.IsNaN(availableN))
                     {
-                        PlugIn.ModelCore.UI.WriteLine("  LIMIT N CALCULATION = NaN!  ");
+                        PlugIn.ModelCore.UI.WriteLine("  LIMIT N CALCULATION = NaN.  Month={0}  ", month);
                         PlugIn.ModelCore.UI.WriteLine("  Site_Row={0:0}, Site_Column={1:0}.", site.Location.Row, site.Location.Column);
                         PlugIn.ModelCore.UI.WriteLine("  Nallocation={0:0.00}, Nfraction={1:0.00}, availableN={2:0.00}.", Nallocation, Nfraction, availableN);
                     }

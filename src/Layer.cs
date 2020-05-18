@@ -242,7 +242,7 @@ namespace Landis.Extension.Succession.NECN
             if (litterC > 0.0000001)
                 return;
 
-              // Determine C/N ratios for flows to SOM1
+              // Determine C/N ratios for flows to OHorizon
                 double ratioCNtoOHorizon = 0.0;
                 double co2loss = 0.0;
 
@@ -296,6 +296,8 @@ namespace Landis.Extension.Succession.NECN
 
                     if (carbonToOHorizon > litterC && PlugIn.Verbose)
                         PlugIn.ModelCore.UI.WriteLine("   ERROR:  Decompose Metabolic:  netCFlow={0:0.000} > layer.Carbon={0:0.000}.", carbonToOHorizon, this.Carbon);
+
+                    // RMS:  TO DO:  Some portion goes directly to MineralSoil, depending on source and depth relative to rooting dept.
 
                     SiteVars.OHorizon[site].MonthlyCarbonInputs += Math.Round(carbonToOHorizon, 2);  //rounding to avoid unexpected behavior
                     SiteVars.OHorizon[site].MonthlyNitrogenInputs += this.TransferNitrogen(carbonToOHorizon, litterC, ratioCNtoOHorizon, site);
@@ -360,11 +362,10 @@ namespace Landis.Extension.Succession.NECN
 
             double nitrogenInputs = 0.0;
 
-            //...If C/N of Box A > C/N of new material entering Box B
-            //...IMMOBILIZATION occurs.
-            //...Compute the amount of N immobilized.
-            //     since  ratioCNtoDestination = netCFlow / (Nflow + immobileN),
-            //     where immobileN is the extra N needed from the mineral pool
+            //...If C/N of Box A > C/N of new material entering Box B, IMMOBILIZATION occurs.
+            //   Compute the amount of N immobilized.
+            //   since  ratioCNtoDestination = netCFlow / (Nflow + immobileN),
+            //   where immobileN is the extra N needed from the mineral pool
             if ((CFlow / NFlow) > ratioCNtoDestination)
             {
                 double immobileN = (CFlow / ratioCNtoDestination) - NFlow;
@@ -426,7 +427,7 @@ namespace Landis.Extension.Succession.NECN
                     PlugIn.ModelCore.UI.WriteLine("     ratio CN to dest={0}", ratioCNtoDestination);
                 }
 
-                this.Nitrogen -= mineralNFlow;
+                //this.Nitrogen -= mineralNFlow;
 
                 SiteVars.MineralN[site] += mineralNFlow;
             }
@@ -478,7 +479,7 @@ namespace Landis.Extension.Succession.NECN
             this.Carbon = Math.Round((this.Carbon - co2loss));
             SiteVars.SourceSink[site].Carbon = Math.Round((SiteVars.SourceSink[site].Carbon + co2loss));
 
-            //Add lost CO2 to monthly heterotrophic respiration
+            //Add loss CO2 to monthly heterotrophic respiration
             SiteVars.MonthlyResp[site][Main.Month] += co2loss;
 
             this.Nitrogen -= mineralNFlow;

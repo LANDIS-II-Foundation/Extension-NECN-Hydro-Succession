@@ -50,6 +50,9 @@ EnzymeTurnoverRate		0.00095780  << aka 'r_ecloss': Calibration target
 CarbonUseEfficiency		0.357329 << aka 'c_use_efficiency':  Calibration target
 ProportionEnymeActing		0.522748  << aka 'p_enz_SOC:  Calibration target
 FractionMicrobialToSOM		0.551334  << aka 'mic_to_som': Calibration target
+FractionOHorizonToMineralSoil	0.55 << default value from Century:  Calibration target?
+FractionMineralSoilToCO2	0.55 << Dummy
+DecayRateMineralSoil		1.0	<< Dummy
 
 >>Dispersal parameters
 SeedingAlgorithm  WardSeedDispersal

@@ -213,6 +213,18 @@ namespace Landis.Extension.Succession.NECN
             ReadVar(fMSOM);
             parameters.SetFractionMicrobialToSOM(fMSOM.Value);
 
+            InputVar<double> fOHMS = new InputVar<double>("FractionOHorizonToMineralSoil");
+            ReadVar(fOHMS);
+            parameters.SetFractionOHtoMS(fOHMS.Value);
+
+            InputVar<double> fMSCO2 = new InputVar<double>("FractionMineralSoilToCO2");
+            ReadVar(fMSCO2);
+            parameters.SetFractionMStoCO2(fMSCO2.Value);
+
+            InputVar<double> drMS = new InputVar<double>("DecayRateMineralSoil");
+            ReadVar(drMS);
+            parameters.SetDecayRateMineralSoil(drMS.Value);
+
             InputVar<SeedingAlgorithms> seedAlg = new InputVar<SeedingAlgorithms>("SeedingAlgorithm");
             ReadVar(seedAlg);
             parameters.SeedAlgorithm = seedAlg.Value;

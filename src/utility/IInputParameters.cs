@@ -116,7 +116,10 @@ namespace Landis.Extension.Succession.NECN
         double EnzymeTurnoverRate { get; }
         double CarbonUseEfficiency { get; }
         double ProportionEnzymeActing { get; }
-        double FractionMicrobialToSOM { get; }
+        double FractionMicrobialToOHorizon { get; }
+        double FractionOHorizonToMineralSoil { get; }
+        double FractionMineralSoilToCO2 { get; }
+        double DecayRateMineralSoil { get; }
 
 
     }

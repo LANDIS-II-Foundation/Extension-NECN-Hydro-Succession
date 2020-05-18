@@ -207,7 +207,7 @@ namespace Landis.Extension.Succession.NECN
         private static double r_ecloss = PlugIn.Parameters.EnzymeTurnoverRate;
         private static double c_use_efficiency = PlugIn.Parameters.CarbonUseEfficiency;
         private static double p_enz_SOC = PlugIn.Parameters.ProportionEnzymeActing;
-        private static double mic_to_som = PlugIn.Parameters.FractionMicrobialToSOM;
+        private static double mic_to_som = PlugIn.Parameters.FractionMicrobialToOHorizon;
 
         // Constants 
         // defaults from Abramoff et al. NOTE:  p[n] indicates the field from the R-code csv input file.
@@ -342,10 +342,6 @@ namespace Landis.Extension.Succession.NECN
                 enzymatic_concentration += dec;
                 mineralN += nmin;
                 c_loss += c_mineralization + overflow;
-                //if (hours>0)                    //Loop ensuring that soil resp is a difference
-                //    co2loss +=c_mineralization + overflow - cout_old;
-                //cout_old = c_mineralization + overflow; 
-                //gross_mineralizaton += nmin;
 
             }
 
@@ -361,25 +357,24 @@ namespace Landis.Extension.Succession.NECN
             if(PlugIn.Verbose)
                 PlugIn.ModelCore.UI.WriteLine(" DAMM:  Month={0}, MineralN={1}", Month, SiteVars.MineralN[site]);
 
-            //    SiteVars.OHorizon[site].Carbon += dsoc;
-            //SiteVars.OHorizon[site].Nitrogen += dson;
-            //SiteVars.OHorizon[site].DOC = Math.Max(SiteVars.OHorizon[site].DOC + (ddoc), 0.001);
-            //SiteVars.OHorizon[site].DON = Math.Max(SiteVars.OHorizon[site].DON + (ddon), 0.0001);
-            //SiteVars.OHorizon[site].MicrobialCarbon += dmic_c;
-            //SiteVars.OHorizon[site].MicrobialNitrogen += dmic_n;
-            //SiteVars.OHorizon[site].EnzymaticConcentration += dec;
+            //SiteVars.OHorizon[site].Respiration(c_loss, site);
+            // A fraction of c_loss should go to MineralSoil
+            double c_to_mineralSoil = c_loss * PlugIn.Parameters.FractionOHorizonToMineralSoil;
+            SiteVars.MineralSoil[site].Carbon += c_to_mineralSoil;
+            c_loss -= c_to_mineralSoil;
 
-            //c_loss += (c_mineralization + overflow); //calculate C efflux
-            //SiteVars.MineralN[site] += nmin;  
+            // SourceSink = NEE
+            SiteVars.SourceSink[site].Carbon += Math.Round((SiteVars.SourceSink[site].Carbon + c_loss));
 
-            SiteVars.OHorizon[site].Respiration(c_loss, site);    
+            //Add lost CO2 to monthly heterotrophic respiration
+            SiteVars.MonthlyResp[site][Main.Month] += c_loss * m2_to_cm2 * depth_to_volume / (g_to_mg);
 
             SiteVars.OHorizon[site].MonthlyCarbonInputs = 0.0;  // Done with these now.
             SiteVars.OHorizon[site].MonthlyNitrogenInputs = 0.0;  // Done with these now.
 
             double cLeached = 0.0;  // Carbon leached to a stream
 
-            if (SiteVars.WaterMovement[site] > 0.0)  //Volume of water moving-ML.  Used to be an index of water movement that indicates saturation (amov)
+            if (SiteVars.WaterMovement[site] > 0.0)  //Volume of water moving-ML.  
             {
 
                 double leachTextureEffect = OtherData.OMLeachIntercept + OtherData.OMLeachSlope * SiteVars.SoilPercentSand[site];
@@ -408,40 +403,24 @@ namespace Landis.Extension.Succession.NECN
             }
 
         }
-        public void Respiration(double co2loss, ActiveSite site)
+        public void Respiration(double c_loss, ActiveSite site)
         {
-            // Compute flows associated with microbial respiration.
-
             // Input:
             //  co2loss = CO2 loss associated with decomposition
 
-            // Mineralization associated with respiration is proportional to the N fraction.
-            // 12/26/2019: Commented out N dynamics below... creates surge in mineral N.
-            //double mineralNFlow = co2loss * this.Nitrogen / this.Carbon;
+            if (c_loss > this.Carbon)
+                c_loss = this.Carbon;
 
-            //if (nmin > this.Nitrogen)
-            //{
-            //    //if((mineralNFlow - this.Nitrogen) > 0.01)
-            //    //{
-            //    //    PlugIn.ModelCore.UI.WriteLine("RESPIRATION for layer {0} {1}:  Mineral N flow exceeds layer Nitrogen.", this.Name, this.Type);
-            //    //    PlugIn.ModelCore.UI.WriteLine("  MineralNFlow={0:0.000}, this.Nitrogen ={0:0.000}", mineralNFlow, this.Nitrogen);
-            //    //    PlugIn.ModelCore.UI.WriteLine("  CO2 loss={0:0.000}, this.Carbon={0:0.000}", co2loss, this.Carbon);
-            //    //    PlugIn.ModelCore.UI.WriteLine("  Site R/C: {0}/{1}.", site.Location.Row, site.Location.Column);
-            //    //}
-            //    nmin = this.Nitrogen;
-            //    co2loss = this.Carbon;
-            //}
-
-            if (co2loss > this.Carbon)
-                co2loss = this.Carbon;
+            // RMS: TO DO:  Some fraction of c_loss should go to MineralSoil
+            double c_to_mineralSoil = c_loss* PlugIn.Parameters.FractionOHorizonToMineralSoil;
+            SiteVars.MineralSoil[site].Carbon += c_to_mineralSoil;
+            c_loss -= c_to_mineralSoil;
 
             //round these to avoid unexpected behavior
-            SiteVars.SourceSink[site].Carbon = Math.Round((SiteVars.SourceSink[site].Carbon + co2loss));
+            SiteVars.SourceSink[site].Carbon = Math.Round((SiteVars.SourceSink[site].Carbon + c_loss));
 
             //Add lost CO2 to monthly heterotrophic respiration
-            SiteVars.MonthlyResp[site][Main.Month] += co2loss;
-
-            //SiteVars.MineralN[site] += nmin;  // 12/26/2019: Causes surge of Mineral N
+            SiteVars.MonthlyResp[site][Main.Month] += c_loss;
 
             return;
         }

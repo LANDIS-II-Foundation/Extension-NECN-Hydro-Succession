@@ -68,7 +68,7 @@ namespace Landis.Extension.Succession.NECN
                     SiteVars.MonthlyLAI[site][Month] = 0.0;
                     SiteVars.SourceSink[site].Carbon = 0.0;
                     SiteVars.TotalWoodBiomass[site] = Main.ComputeWoodBiomass((ActiveSite) site);
-                    //SiteVars.LAI[site] = Century.ComputeLAI((ActiveSite)site);
+                    //SiteVars.LAI[site] = ComputeLAI((ActiveSite)site);
                                    
                     double ppt = ClimateRegionData.AnnualWeather[ecoregion].MonthlyPrecip[Main.Month];
 
@@ -106,6 +106,7 @@ namespace Landis.Extension.Succession.NECN
                     WoodLayer.Decompose(site);
                     LitterLayer.Decompose(site);
                     DAMMLayer.Decompose(y, Month, site);
+                    MineralSoilLayer.Decompose(site);
 
                     // Volatilization loss as a function of the mineral N which remains after uptake by plants.  
                     // ML added a correction factor for wetlands since their denitrification rate is double that of wetlands

@@ -11,7 +11,7 @@ namespace Landis.Extension.Succession.NECN
     /// <summary>
     /// Utility methods.
     /// </summary>
-    public static class Util
+    public static class ReadInputMaps
     {
 
         /// <summary>
@@ -390,7 +390,13 @@ namespace Landis.Extension.Succession.NECN
                 SiteVars.OHorizon[site].EnzymaticConcentration = 0.001;
                 SiteVars.OHorizon[site].MicrobialCarbon = 0.00001;
                 SiteVars.OHorizon[site].MicrobialNitrogen = 0.000001;
+
+                // RMS: TO DO:  This needs to be an input file, simply duplicate for now.
+                SiteVars.MineralSoil[site].Carbon = SiteVars.OHorizon[site].Carbon;
+                SiteVars.MineralSoil[site].Nitrogen = SiteVars.OHorizon[site].Nitrogen;
             }
+
+
         }
         ////---------------------------------------------------------------------
         private static IInputRaster<DoublePixel> MakeDoubleMap(string path)

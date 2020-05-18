@@ -87,19 +87,19 @@ namespace Landis.Extension.Succession.NECN
             
             FunctionalType.Initialize(Parameters);
             SpeciesData.Initialize(Parameters);
-            Util.ReadSoilDepthMap(Parameters.SoilDepthMapName);
-            Util.ReadSoilDrainMap(Parameters.SoilDrainMapName);
-            Util.ReadSoilBaseFlowMap(Parameters.SoilBaseFlowMapName);
-            Util.ReadSoilStormFlowMap(Parameters.SoilStormFlowMapName);
-            Util.ReadFieldCapacityMap(Parameters.SoilFieldCapacityMapName);
-            Util.ReadWiltingPointMap(Parameters.SoilWiltingPointMapName);
-            Util.ReadPercentSandMap(Parameters.SoilPercentSandMapName);
-            Util.ReadPercentClayMap(Parameters.SoilPercentClayMapName);
-            Util.ReadSoilBulkDensityMap(Parameters.SoilBulkDensityMapName);
-            Util.ReadSoilParticleDensityMap(Parameters.SoilParticleDensityMapName);
+            ReadInputMaps.ReadSoilDepthMap(Parameters.SoilDepthMapName);
+            ReadInputMaps.ReadSoilDrainMap(Parameters.SoilDrainMapName);
+            ReadInputMaps.ReadSoilBaseFlowMap(Parameters.SoilBaseFlowMapName);
+            ReadInputMaps.ReadSoilStormFlowMap(Parameters.SoilStormFlowMapName);
+            ReadInputMaps.ReadFieldCapacityMap(Parameters.SoilFieldCapacityMapName);
+            ReadInputMaps.ReadWiltingPointMap(Parameters.SoilWiltingPointMapName);
+            ReadInputMaps.ReadPercentSandMap(Parameters.SoilPercentSandMapName);
+            ReadInputMaps.ReadPercentClayMap(Parameters.SoilPercentClayMapName);
+            ReadInputMaps.ReadSoilBulkDensityMap(Parameters.SoilBulkDensityMapName);
+            ReadInputMaps.ReadSoilParticleDensityMap(Parameters.SoilParticleDensityMapName);
             //Util.ReadDoubleMap(Parameters.SoilParticleDensityMapName);
-            Util.ReadSoilCNMaps(Parameters.InitialSOC_PrimaryMapName, Parameters.InitialSON_PrimaryMapName);
-            Util.ReadDeadWoodMaps(Parameters.InitialDeadSurfaceMapName, Parameters.InitialDeadSoilMapName);
+            ReadInputMaps.ReadSoilCNMaps(Parameters.InitialSOC_PrimaryMapName, Parameters.InitialSON_PrimaryMapName);
+            ReadInputMaps.ReadDeadWoodMaps(Parameters.InitialDeadSurfaceMapName, Parameters.InitialDeadSoilMapName);
 
             //Initialize climate.
             Climate.Initialize(Parameters.ClimateConfigFile, false, modelCore);

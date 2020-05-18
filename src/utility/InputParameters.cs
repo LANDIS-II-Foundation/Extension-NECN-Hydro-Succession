@@ -56,6 +56,9 @@ namespace Landis.Extension.Succession.NECN
         private double carbonUseEfficiency;
         private double proportionEnymeActing;
         private double fractionMicrobialToSOM;
+        private double fractionOHorizonToMineralSoil;
+        private double fractionMineralSoilToCO2;
+        private double decayRateMineralSoil;
 
         private ISpeciesDataset speciesDataset;
         
@@ -450,7 +453,10 @@ namespace Landis.Extension.Succession.NECN
         public double EnzymeTurnoverRate { get { return enzymeTurnoverRate; } }
         public double CarbonUseEfficiency { get { return carbonUseEfficiency;  } }
         public double ProportionEnzymeActing { get { return proportionEnymeActing;  } }
-        public double FractionMicrobialToSOM { get { return fractionMicrobialToSOM;  } }
+        public double FractionMicrobialToOHorizon { get { return fractionMicrobialToSOM;  } }
+        public double FractionOHorizonToMineralSoil { get { return fractionOHorizonToMineralSoil; } }
+        public double FractionMineralSoilToCO2 { get { return fractionMineralSoilToCO2; } }
+        public double DecayRateMineralSoil { get { return decayRateMineralSoil;  } }
 
 
         //---------------------------------------------------------------------
@@ -901,6 +907,21 @@ namespace Landis.Extension.Succession.NECN
         public void SetFractionMicrobialToSOM(InputValue<double> newValue)
         {
             fractionMicrobialToSOM = CheckBiomassParm(newValue, 0.0, 1.0);
+        }
+        //---------------------------------------------------------------------
+        public void SetFractionOHtoMS(InputValue<double> newValue)
+        {
+            fractionOHorizonToMineralSoil = CheckBiomassParm(newValue, 0.0, 1.0);
+        }
+        //---------------------------------------------------------------------
+        public void SetFractionMStoCO2(InputValue<double> newValue)
+        {
+            fractionMineralSoilToCO2 = CheckBiomassParm(newValue, 0.0, 1.0);
+        }
+        //---------------------------------------------------------------------
+        public void SetDecayRateMineralSoil(InputValue<double> newValue)
+        {
+            decayRateMineralSoil = CheckBiomassParm(newValue, 0.0, 1.0);
         }
         //---------------------------------------------------------------------
 

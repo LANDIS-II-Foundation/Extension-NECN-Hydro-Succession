@@ -34,8 +34,10 @@ namespace Landis.Extension.Succession.NECN
         private string initialDeadSoilMapName;
         private string soilBulkDensityMapName;
         private string soilParticleDensityMapName;
-        private string initialSOC_PrimaryMapName;
-        private string initialSON_PrimaryMapName;
+        private string initial_OHorizon_C_MapName;
+        private string initial_OHorizon_N_MapName;
+        private string initial_MineralSoil_C_MapName;
+        private string initial_MineralSoil_N_MapName;
 
         private bool calibrateMode;
         private bool smokeModelOutputs;
@@ -620,35 +622,68 @@ namespace Landis.Extension.Succession.NECN
         }
         //---------------------------------------------------------------------
 
-        public string InitialSOC_PrimaryMapName
+        public string Initial_OHorizon_C_MapName
         {
             get
             {
-                return initialSOC_PrimaryMapName;
+                return initial_OHorizon_C_MapName;
             }
             set
             {
                 string path = value;
                 if (path.Trim(null).Length == 0)
                     throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-                initialSOC_PrimaryMapName = value;
+                initial_OHorizon_C_MapName = value;
             }
         }
 
         //---------------------------------------------------------------------
 
-        public string InitialSON_PrimaryMapName
+        public string Initial_OHorizon_N_MapName
         {
             get
             {
-                return initialSON_PrimaryMapName;
+                return initial_OHorizon_N_MapName;
             }
             set
             {
                 string path = value;
                 if (path.Trim(null).Length == 0)
                     throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-                initialSON_PrimaryMapName = value;
+                initial_OHorizon_N_MapName = value;
+            }
+        }
+        //---------------------------------------------------------------------
+
+        public string Initial_MineralSoil_C_MapName
+        {
+            get
+            {
+                return initial_MineralSoil_C_MapName;
+            }
+            set
+            {
+                string path = value;
+                if (path.Trim(null).Length == 0)
+                    throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
+                initial_MineralSoil_C_MapName = value;
+            }
+        }
+
+        //---------------------------------------------------------------------
+
+        public string Initial_MineralSoil_N_MapName
+        {
+            get
+            {
+                return initial_MineralSoil_N_MapName;
+            }
+            set
+            {
+                string path = value;
+                if (path.Trim(null).Length == 0)
+                    throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
+                initial_MineralSoil_N_MapName = value;
             }
         }
         //---------------------------------------------------------------------

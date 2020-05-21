@@ -33,7 +33,7 @@ namespace Landis.Extension.Succession.NECN
                        
         // Soil layers
         //private static ISiteVar<Layer> som1surface;
-        private static ISiteVar<DAMMLayer> oHorizon;
+        private static ISiteVar<OHorizonLayer> oHorizon;
         //private static ISiteVar<Layer> dissolved_organic;
         //private static ISiteVar<Layer> som2;
         private static ISiteVar<Layer> mineralSoil;
@@ -136,7 +136,7 @@ namespace Landis.Extension.Succession.NECN
             //som1surface         = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             //som2                = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             mineralSoil                = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
-            oHorizon = PlugIn.ModelCore.Landscape.NewSiteVar<DAMMLayer>();
+            oHorizon = PlugIn.ModelCore.Landscape.NewSiteVar<OHorizonLayer>();
             soilDepth = PlugIn.ModelCore.Landscape.NewSiteVar<int>();
             soilDrain           = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             soilBaseFlowFraction = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
@@ -223,7 +223,7 @@ namespace Landis.Extension.Succession.NECN
                 surfaceMetabolic[site]      = new Layer(LayerName.Metabolic, LayerType.Surface);
                 soilStructural[site]        = new Layer(LayerName.Structural, LayerType.Soil);
                 soilMetabolic[site]         = new Layer(LayerName.Metabolic, LayerType.Soil);
-                oHorizon[site]              = new DAMMLayer(); //, LayerType.Soil);
+                oHorizon[site]              = new OHorizonLayer(); //, LayerType.Soil);
                 //som1surface[site]           = new Layer(LayerName.SOM1, LayerType.Surface);
                 //som2[site]                  = new Layer(LayerName.SOM2, LayerType.Soil);
                 mineralSoil[site]                  = new Layer(LayerName.Mineral, LayerType.Soil);
@@ -444,7 +444,7 @@ namespace Landis.Extension.Succession.NECN
         /// <summary>
         /// The Primary soil.
         /// </summary>
-        public static ISiteVar<DAMMLayer> OHorizon
+        public static ISiteVar<OHorizonLayer> OHorizon
         {
             get {
                 return oHorizon;

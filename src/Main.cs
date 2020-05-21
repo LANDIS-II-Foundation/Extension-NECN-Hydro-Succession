@@ -105,7 +105,7 @@ namespace Landis.Extension.Succession.NECN
 
                     WoodLayer.Decompose(site);
                     LitterLayer.Decompose(site);
-                    DAMMLayer.Decompose(y, Month, site);
+                    OHorizonLayer.Decompose(y, Month, site);
                     MineralSoilLayer.Decompose(site);
 
                     // Volatilization loss as a function of the mineral N which remains after uptake by plants.  

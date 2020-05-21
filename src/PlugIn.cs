@@ -98,7 +98,7 @@ namespace Landis.Extension.Succession.NECN
             ReadInputMaps.ReadSoilBulkDensityMap(Parameters.SoilBulkDensityMapName);
             ReadInputMaps.ReadSoilParticleDensityMap(Parameters.SoilParticleDensityMapName);
             //Util.ReadDoubleMap(Parameters.SoilParticleDensityMapName);
-            ReadInputMaps.ReadSoilCNMaps(Parameters.InitialSOC_PrimaryMapName, Parameters.InitialSON_PrimaryMapName);
+            ReadInputMaps.ReadSoilCNMaps(Parameters.Initial_OHorizon_C_MapName, Parameters.Initial_OHorizon_N_MapName, Parameters.Initial_MineralSoil_C_MapName, Parameters.Initial_MineralSoil_N_MapName);
             ReadInputMaps.ReadDeadWoodMaps(Parameters.InitialDeadSurfaceMapName, Parameters.InitialDeadSoilMapName);
 
             //Initialize climate.
@@ -220,7 +220,7 @@ namespace Landis.Extension.Succession.NECN
             InitialBiomass initialBiomass = InitialBiomass.Compute(site, initialCommunity);
             SiteVars.MineralN[site] = Parameters.InitialMineralN;
             SiteVars.OHorizon[site].DOC = Parameters.InitialDOC;
-            SiteVars.OHorizon[site].DON = SiteVars.OHorizon[site].DOC / DAMMLayer.CN_DOCN;
+            SiteVars.OHorizon[site].DON = SiteVars.OHorizon[site].DOC / OHorizonLayer.CN_DOCN;
         }
         //---------------------------------------------------------------------
 

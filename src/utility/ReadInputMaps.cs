@@ -339,12 +339,9 @@ namespace Landis.Extension.Succession.NECN
             }
         }
 
-        public static void ReadSoilCNMaps(string pathSOC, string pathSON)
+        public static void ReadSoilCNMaps(string pathSOC, string pathSON, string pathMSC, string pathMSN)
         {
             IInputRaster<DoublePixel> map = MakeDoubleMap(pathSOC);
-
-            
-            //map = MakeDoubleMap(pathSOC);
 
             using (map)
             {
@@ -384,16 +381,51 @@ namespace Landis.Extension.Succession.NECN
                 }
             }
 
-            // Initialize other components:
+            map = MakeDoubleMap(pathMSC);
+
+            using (map)
+            {
+                DoublePixel pixel = map.BufferPixel;
+                foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+                {
+                    map.ReadBufferPixel();
+                    double mapValue = pixel.MapCode.Value;
+                    if (site.IsActive)
+                    {
+                        if (mapValue <= 1.0 || mapValue > 10000.0)
+                            throw new InputValueException(mapValue.ToString(),
+                                                          "SOC value {0} is not between {1:0.0} and {2:0.0}. Site_Row={3:0}, Site_Column={4:0}",
+                                                          mapValue, 1.0, 10000.0, site.Location.Row, site.Location.Column);
+                        SiteVars.MineralSoil[site].Carbon = mapValue;
+                    }
+                }
+            }
+
+            map = MakeDoubleMap(pathMSN);
+
+            using (map)
+            {
+                DoublePixel pixel = map.BufferPixel;
+                foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+                {
+                    map.ReadBufferPixel();
+                    double mapValue = pixel.MapCode.Value;
+                    if (site.IsActive)
+                    {
+                        if (mapValue <= 0.0 || mapValue > 500.0)
+                            throw new InputValueException(mapValue.ToString(),
+                                                          "SON value {0} is not between {1:0.0} and {2:0.0}. Site_Row={3:0}, Site_Column={4:0}",
+                                                          mapValue, 0.0, 500.0, site.Location.Row, site.Location.Column);
+                        SiteVars.MineralSoil[site].Nitrogen = mapValue;
+                    }
+                }
+            }
+            // RMS: Initialize other components with small values:
             foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
             {
                 SiteVars.OHorizon[site].EnzymaticConcentration = 0.001;
                 SiteVars.OHorizon[site].MicrobialCarbon = 0.00001;
                 SiteVars.OHorizon[site].MicrobialNitrogen = 0.000001;
-
-                // RMS: TO DO:  This needs to be an input file, simply duplicate for now.
-                SiteVars.MineralSoil[site].Carbon = SiteVars.OHorizon[site].Carbon;
-                SiteVars.MineralSoil[site].Nitrogen = SiteVars.OHorizon[site].Nitrogen;
             }
 
 

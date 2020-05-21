@@ -19,9 +19,6 @@ namespace Landis.Extension.Succession.NECN
         [DataFieldAttribute(Desc = "Climate Region Index")]
         public int ClimateRegionIndex { set; get; }
 
-        //[DataFieldAttribute(Desc = "Soil Water Holding Capacity")]
-        //public int SoilWaterHoldingCapacity { set; get; }
-
         [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Number of Sites")]
         public int NumSites { set; get; }
 
@@ -52,9 +49,12 @@ namespace Landis.Extension.Succession.NECN
         
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Total N", Format = "0.0")]
         public double TotalN { get; set; }
-        
-        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Gross Mineralization", Format = "0.0")]
-        //public double GrossMineralization { get; set; }
+
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "OHorizon C", Format = "0.0")]
+        public double C_OHorizon { get; set; }
+
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "MineralSoil C", Format = "0.0")]
+        public double C_MineralSoil { get; set; }
 
         [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Live Leaf C", Format = "0.0")]
         public double C_LiveLeaf { get; set; }
@@ -74,32 +74,18 @@ namespace Landis.Extension.Succession.NECN
         [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Coarse Root C", Format = "0.0")]
         public double C_DeadCRoot { get; set; }
 
-        //log.Write("C:SurfStruc, C:SurfMeta, C:SoilStruc, C:SoilMeta, ");
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Leaf Structural C", Format = "0.0")]
-        public double C_DeadLeaf_Struc { get; set; }
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Leaf C", Format = "0.0")]
+        public double C_DeadLeaf { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Leaf Metabolic C", Format = "0.0")]
-        public double C_DeadLeaf_Meta { get; set; }
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Fine Root C", Format = "0.0")]
+        public double C_DeadFRoot { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Fine Root Structural C", Format = "0.0")]
-        public double C_DeadFRoot_Struc { get; set; }
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "OHorizon N", Format = "0.0")]
+        public double N_OHorizon { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Fine RootMetabolic C", Format = "0.0")]
-        public double C_DeadFRoot_Meta { get; set; }
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "MineralSoil N", Format = "0.0")]
+        public double N_MineralSoil { get; set; }
 
-        //[DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "SOM1 Surface C", Format = "0.0")]
-        //public double C_SOM1surf { get; set; }
-
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Primary SOC", Format = "0.0")]
-        public double C_SoilPrimary { get; set; }
-
-        //[DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "SOM2 C", Format = "0.0")]
-        //public double C_SOM2 { get; set; }
-
-        //[DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "SOM3 C", Format = "0.0")]
-        //public double C_SOM3 { get; set; }
-
-        //log.Write("N:CohortLeaf, N:CohortWood, N:DeadWood, N:DeadRoot, ");
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Leaf N", Format = "0.0")]
         public double N_Leaf { get; set; }
 
@@ -118,29 +104,12 @@ namespace Landis.Extension.Succession.NECN
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Coarse Root N", Format = "0.0")]
         public double N_DeadCRoot { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Leaf Structural N", Format = "0.0")]
-        public double N_DeadLeaf_Struc { get; set; }
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Leaf N", Format = "0.0")]
+        public double N_DeadLeaf { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Leaf Metabolic N", Format = "0.0")]
-        public double N_DeadLeaf_Meta { get; set; }
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Fine Root N", Format = "0.0")]
+        public double N_DeadFRoot { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Fine Root Structural N", Format = "0.0")]
-        public double N_DeadFRoot_Struc { get; set; }
-
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Fine Root Metabolic N", Format = "0.0")]
-        public double N_DeadFRoot_Meta { get; set; }
-
-        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM1 Surface N", Format = "0.0")]
-        //public double N_SOM1surf { get; set; }
-
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Primary SON", Format = "0.0")]
-        public double N_SoilPrimary { get; set; }
-
-        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM2 N", Format = "0.0")]
-        //public double N_SOM2 { get; set; }
-
-        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM3 N", Format = "0.0")]
-        //public double N_SOM3 { get; set; }
 
         //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Surface Structural Net Mineralization", Format = "0.0")]
         //public double SurfStrucNetMin { get; set; }

@@ -108,12 +108,6 @@ namespace Landis.Extension.Succession.NECN
                 defoliatedLeafBiomass = 0.0;
             }
 
-            // RMS 03/2016: Additional mortality as reaching capacity limit:  SAVE FOR NEXT RELEASE
-            //double maxBiomass = SpeciesData.B_MAX_Spp[cohort.Species][ecoregion];
-            //double limitCapacity = Math.Min(1.0, Math.Exp(siteBiomass / maxBiomass * 5.0) / Math.Exp(5.0));  // 1.0 = total limit; 0.0 = No limit
-            //totalMortality[0] += (actualANPP[0] * limitCapacity); // totalMortality not to exceed ANPP allocation
-
-
             if (totalMortality[0] <= 0.0 || cohort.WoodBiomass <= 0.0)
                 totalMortality[0] = 0.0;
 
@@ -178,14 +172,9 @@ namespace Landis.Extension.Succession.NECN
 
             double limitLAI = calculateLAI_Limit(cohort, site);
 
-            // RMS 03/2016: Testing alternative more similar to how Biomass Succession operates: REMOVE FOR NEXT RELEASE
-            //double limitCapacity = 1.0 - Math.Min(1.0, Math.Exp(siteBiomass / maxBiomass * 5.0) / Math.Exp(5.0));
-
             double competition_limit = calculateCompetition_Limit(cohort, site);
 
-            //double potentialNPP_NoN = maxNPP * limitLAI * limitH20 * limitT; // * limitCapacity;
             double potentialNPP = maxNPP * limitLAI * limitH20 * limitT * competition_limit;
-            //double potentialNPP = maxNPP * limitLAI * limitH20 * limitT * limitCapacity;
 
             double limitN = calculateN_Limit(site, cohort, potentialNPP, leafFractionNPP);
 
@@ -679,21 +668,15 @@ namespace Landis.Extension.Succession.NECN
         private double calculateTemp_Limit(ActiveSite site, ISpecies species)
         {
             //Originally from gpdf.f of CENTURY model
-            //It calculates the limitation of soil temperature on aboveground forest potential production.
-            //It is a function and only called by potcrp.f and potfor.f.
+            //Calculate the limitation of soil temperature on aboveground forest potential production.
 
-            //A1 is temperature. A2~A5 are paramters from tree.100
-
-            //...This routine is functionally equivalent to the routine of the
-            //     same name, described in the publication:
-
-            //       Some Graphs and their Functional Forms
+            //...This routine is described in the publication:
+            //       Some Graphs and their Functionals:
             //       Technical Report No. 153
             //       William Parton and George Innis (1972)
             //       Natural Resource Ecology Lab.
             //       Colorado State University
             //       Fort collins, Colorado  80523
-            //...Local variables
 
             double A1 = SiteVars.SoilTemperature[site];
             double A2 = FunctionalType.Table[SpeciesData.FuncType[species]].TempCurve1;

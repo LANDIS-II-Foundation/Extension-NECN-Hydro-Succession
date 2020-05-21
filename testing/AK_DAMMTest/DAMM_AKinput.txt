@@ -26,8 +26,10 @@ SoilPercentSandMapName			./SingleCellRasters/singlecell_point56.tif
 SoilPercentClayMapName			./SingleCellRasters/singlecell_point3.tif
 SoilBulkDensityMapName			./SingleCellRasters/singlecell_point1.tif
 SoilParticleDensityMapName		./SingleCellRasters/ParticleDensity.tif
-InitialSOC_PrimaryMapName			./SingleCellRasters/singlecell_4600.tif
-InitialSON_PrimaryMapName			./SingleCellRasters/singlecell_60.tif
+Initial_OHorizon_C_MapName			./SingleCellRasters/singlecell_4600.tif
+Initial_OHorizon_N_MapName			./SingleCellRasters/singlecell_60.tif
+Initial_MineralSoil_C_MapName			./SingleCellRasters/singlecell_4600.tif
+Initial_MineralSoil_N_MapName			./SingleCellRasters/singlecell_60.tif
 InitialDeadWoodSurfaceMapName	./SingleCellRasters/singlecell_1500.tif
 InitialDeadCoarseRootsMapName	./SingleCellRasters/singlecell_1600.tif
 

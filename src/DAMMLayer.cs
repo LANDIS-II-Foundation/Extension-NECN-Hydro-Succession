@@ -11,7 +11,7 @@ namespace Landis.Extension.Succession.NECN
     //public enum SoilName { OHorizon, Mineral };
     /// <summary>
     /// </summary>
-    public class DAMMLayer 
+    public class OHorizonLayer 
     {
 
         //private SoilName name;
@@ -32,7 +32,7 @@ namespace Landis.Extension.Succession.NECN
 
 
         //---------------------------------------------------------------------
-        public DAMMLayer()//, LayerType type)
+        public OHorizonLayer()//, LayerType type)
         {
             //this.name = name;
             //this.type = type;
@@ -311,8 +311,8 @@ namespace Landis.Extension.Succession.NECN
 
                 double overflow = growth_c - cn_microbial * growth;                         //calculate overflow metabolism of C
                 double nmin = growth_n - growth;                                            //calculate N mineralization
-                if(nmin > 0.0)
-                    PlugIn.ModelCore.UI.WriteLine(" Nmin={0}", nmin);
+                //if(nmin > 0.0)
+                //    PlugIn.ModelCore.UI.WriteLine(" Nmin={0}", nmin);
 
                 double dmic_c = (cn_microbial * growth) - death_c;                            //calculate change in microbial C pool
                 double dmic_n = growth - death_n;                                           //calculate change in microbial N pool
@@ -411,7 +411,7 @@ namespace Landis.Extension.Succession.NECN
             if (c_loss > this.Carbon)
                 c_loss = this.Carbon;
 
-            // RMS: TO DO:  Some fraction of c_loss should go to MineralSoil
+            // Some fraction of c_loss should go to MineralSoil
             double c_to_mineralSoil = c_loss* PlugIn.Parameters.FractionOHorizonToMineralSoil;
             SiteVars.MineralSoil[site].Carbon += c_to_mineralSoil;
             c_loss -= c_to_mineralSoil;

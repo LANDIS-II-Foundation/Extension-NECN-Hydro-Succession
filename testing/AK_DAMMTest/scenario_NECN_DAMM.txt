@@ -1,6 +1,6 @@
 LandisData  Scenario
 
-Duration  20
+Duration  25
 
 Species         AlaskaSpecies.txt
 Ecoregions      AK_climate_regions.txt

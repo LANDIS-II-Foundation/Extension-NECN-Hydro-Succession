@@ -144,13 +144,21 @@ namespace Landis.Extension.Succession.NECN
             ReadVar(soilPDMapName);
             parameters.SoilParticleDensityMapName = soilPDMapName.Value;
 
-            InputVar<string> socMapName = new InputVar<string>("InitialSOC_PrimaryMapName");
-            ReadVar(socMapName);
-            parameters.InitialSOC_PrimaryMapName = socMapName.Value;
+            InputVar<string> oh_c_MapName = new InputVar<string>("Initial_OHorizon_C_MapName");
+            ReadVar(oh_c_MapName);
+            parameters.Initial_OHorizon_C_MapName = oh_c_MapName.Value;
 
-            InputVar<string> sonMapName = new InputVar<string>("InitialSON_PrimaryMapName");
-            ReadVar(sonMapName);
-            parameters.InitialSON_PrimaryMapName = sonMapName.Value;
+            InputVar<string> oh_n_MapName = new InputVar<string>("Initial_OHorizon_N_MapName");
+            ReadVar(oh_n_MapName);
+            parameters.Initial_OHorizon_N_MapName = oh_n_MapName.Value;
+
+            InputVar<string> ms_c_MapName = new InputVar<string>("Initial_MineralSoil_C_MapName");
+            ReadVar(ms_c_MapName);
+            parameters.Initial_MineralSoil_C_MapName = ms_c_MapName.Value;
+
+            InputVar<string> ms_n_MapName = new InputVar<string>("Initial_MineralSoil_N_MapName");
+            ReadVar(ms_n_MapName);
+            parameters.Initial_MineralSoil_N_MapName = ms_n_MapName.Value;
 
             InputVar<string> deadSurfMapName = new InputVar<string>("InitialDeadWoodSurfaceMapName");
             ReadVar(deadSurfMapName);

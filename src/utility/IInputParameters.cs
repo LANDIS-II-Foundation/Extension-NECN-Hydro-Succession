@@ -27,8 +27,10 @@ namespace Landis.Extension.Succession.NECN
         string SoilPercentClayMapName { get; set; }
         string SoilBulkDensityMapName { get; set; }
         string SoilParticleDensityMapName { get; set; }
-        string InitialSOC_PrimaryMapName { get; set; }
-        string InitialSON_PrimaryMapName { get; set; }
+        string Initial_OHorizon_C_MapName { get; set; }
+        string Initial_OHorizon_N_MapName { get; set; }
+        string Initial_MineralSoil_C_MapName { get; set; }
+        string Initial_MineralSoil_N_MapName { get; set; }
         string InitialDeadSurfaceMapName { get; set; }
         string InitialDeadSoilMapName { get; set; }       
         //string InitialSOM1CSurfaceMapName { get; set; }

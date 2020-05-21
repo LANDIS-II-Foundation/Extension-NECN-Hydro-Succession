@@ -238,87 +238,93 @@ namespace Landis.Extension.Succession.NECN
         {
             double litterC = this.Carbon;
             double anerb = SiteVars.AnaerobicEffect[site];
+            
+            // RMS:  Assume that OHorizon is 10cm, the rest is MineralSoil.  
+            double fractionOHorizon = Math.Max(10.0 / SiteVars.SoilDepth[site], 1.0);
+            double fractionMineralSoil = 1.0 - fractionOHorizon;
 
             if (litterC > 0.0000001)
                 return;
 
-              // Determine C/N ratios for flows to OHorizon
-                double ratioCNtoOHorizon = 0.0;
-                double co2loss = 0.0;
+            // Determine C/N ratios for flows to OHorizon
+            double ratioCNtoSoils = 0.0;
+            double co2loss = 0.0;
 
-                // Compute ratios for surface  metabolic residue
+            // Compute ratios for surface  metabolic residue
+            if (this.Type == LayerType.Surface)
+                ratioCNtoSoils = Layer.AbovegroundDecompositionRatio(this.Nitrogen, litterC);
+
+            //Compute ratios for soil metabolic residue
+            else
+                ratioCNtoSoils = Layer.BelowgroundDecompositionRatio(site,
+                                    OtherData.MinCNenterOHorizon,
+                                    OtherData.MaxCNenterOHorizon,
+                                    OtherData.MinContentN_OHorizon);
+
+            //Compute total C flow out of metabolic layer
+            double totalCFlow = litterC
+                            * SiteVars.DecayFactor[site]
+                            * OtherData.LitterParameters[(int)this.Type].DecayRateMetabolicC
+                            * OtherData.MonthAdjust;
+
+            //Effect of soil anerobic conditions: 
+            if (this.Type == LayerType.Soil) totalCFlow *= anerb;
+
+            // Add DOC from litter to OHorizon
+            double flowToDOC = totalCFlow * PlugIn.Parameters.FractionLitterDecayToDOC * fractionOHorizon;
+            double flowToDON = flowToDOC / ratioCNtoSoils;
+
+            this.Carbon -= Math.Min(flowToDOC, this.Carbon);
+            SiteVars.OHorizon[site].DOC += flowToDOC;
+            this.Nitrogen -= Math.Min(flowToDON, this.Nitrogen);
+            SiteVars.OHorizon[site].DON += flowToDON;
+
+            //Make sure metabolic C does not go negative.
+            if (totalCFlow > litterC)
+                totalCFlow = litterC;
+
+            //If decomposition can occur,
+            if (this.DecomposePossible(ratioCNtoSoils, SiteVars.MineralN[site]))
+            {
+                //CO2 loss
                 if (this.Type == LayerType.Surface)
-                    ratioCNtoOHorizon = Layer.AbovegroundDecompositionRatio(this.Nitrogen, litterC);
-
-                //Compute ratios for soil metabolic residue
+                    co2loss = totalCFlow * OtherData.MetabolicToCO2Surface;
                 else
-                    ratioCNtoOHorizon = Layer.BelowgroundDecompositionRatio(site,
-                                        OtherData.MinCNenterOHorizon,
-                                        OtherData.MaxCNenterOHorizon,
-                                        OtherData.MinContentN_OHorizon);
+                    co2loss = totalCFlow * OtherData.MetabolicToCO2Soil;
 
-                //Compute total C flow out of metabolic layer
-                double totalCFlow = litterC
-                                * SiteVars.DecayFactor[site]
-                                * OtherData.LitterParameters[(int) this.Type].DecayRateMetabolicC
-                                * OtherData.MonthAdjust;
-
-                //Effect of soil anerobic conditions: 
-                if (this.Type == LayerType.Soil) totalCFlow *= anerb;
-
-                // Add DOC from litter to OHorizon
-                double flowToDOC = totalCFlow * PlugIn.Parameters.FractionLitterDecayToDOC;
-                double flowToDON = flowToDOC / ratioCNtoOHorizon;
-
-                this.Carbon -= Math.Min(flowToDOC, this.Carbon);
-                SiteVars.OHorizon[site].DOC += flowToDOC;
-                this.Nitrogen -= Math.Min(flowToDON, this.Nitrogen);
-                SiteVars.OHorizon[site].DON += flowToDON;
-
-                //Make sure metabolic C does not go negative.
-                if (totalCFlow > litterC)
-                    totalCFlow = litterC;
-
-                //If decomposition can occur,
-                if(this.DecomposePossible(ratioCNtoOHorizon, SiteVars.MineralN[site]))
-                {
-                    //CO2 loss
-                    if (this.Type == LayerType.Surface)
-                        co2loss = totalCFlow * OtherData.MetabolicToCO2Surface;
-                    else
-                        co2loss = totalCFlow * OtherData.MetabolicToCO2Soil;
-
-                    this.Respiration(co2loss, site);
+                this.Respiration(co2loss, site);
 
 
-                    //Decompose metabolic into SOC / SON
-                    double carbonToOHorizon = totalCFlow - co2loss;
+                //Decompose metabolic into SOC / SON
+                double carbonToSoils = totalCFlow - co2loss;
 
-                    if (carbonToOHorizon > litterC && PlugIn.Verbose)
-                        PlugIn.ModelCore.UI.WriteLine("   ERROR:  Decompose Metabolic:  netCFlow={0:0.000} > layer.Carbon={0:0.000}.", carbonToOHorizon, this.Carbon);
+                if (carbonToSoils > litterC && PlugIn.Verbose)
+                    PlugIn.ModelCore.UI.WriteLine("   ERROR:  Decompose Metabolic:  netCFlow={0:0.000} > layer.Carbon={0:0.000}.", carbonToSoils, this.Carbon);
 
-                    // RMS:  TO DO:  Some portion goes directly to MineralSoil, depending on source and depth relative to rooting dept.
+                SiteVars.OHorizon[site].MonthlyCarbonInputs += Math.Round(carbonToSoils * fractionOHorizon, 2);  //rounding to avoid unexpected behavior
+                SiteVars.OHorizon[site].MonthlyNitrogenInputs += this.TransferNitrogen(carbonToSoils * fractionOHorizon, litterC, ratioCNtoSoils, site);
 
-                    SiteVars.OHorizon[site].MonthlyCarbonInputs += Math.Round(carbonToOHorizon, 2);  //rounding to avoid unexpected behavior
-                    SiteVars.OHorizon[site].MonthlyNitrogenInputs += this.TransferNitrogen(carbonToOHorizon, litterC, ratioCNtoOHorizon, site);
-                    
-                    //this.TransferCarbon(SiteVars.OHorizon[site], netCFlow);
-                    //this.TransferNitrogen(SiteVars.OHorizon[site], netCFlow, litterC, ratioCNtoOHorizon, site);
+                // RMS:  Some portion goes directly to MineralSoil, depending on source and depth relative to rooting dept.
+                SiteVars.MineralSoil[site].Carbon += Math.Round(carbonToSoils * fractionMineralSoil, 2);  //rounding to avoid unexpected behavior
+                SiteVars.MineralSoil[site].Nitrogen += this.TransferNitrogen(carbonToSoils * fractionMineralSoil, litterC, ratioCNtoSoils, site);
+                
+                //this.TransferCarbon(SiteVars.OHorizon[site], netCFlow);
+                //this.TransferNitrogen(SiteVars.OHorizon[site], netCFlow, litterC, ratioCNtoOHorizon, site);
 
-                    // -- CARBON AND NITROGEN ---------------------------
-                    // Partition and schedule C flows
-                    // Compute and schedule N flows and update mineralization accumulators.
-                    //if((int) this.Type == (int) LayerType.Surface)
-                    //{
-                    //    this.TransferCarbon(SiteVars.SOM1surface[site], netCFlow);
-                    //    this.TransferNitrogen(SiteVars.SOM1surface[site], netCFlow, litterC, ratioCNtoSOM1, site);
-                    //    //PlugIn.ModelCore.UI.WriteLine("DecomposeMetabolic.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
-                    //}
-                    //else
-                    //{
-                    //}
+                // -- CARBON AND NITROGEN ---------------------------
+                // Partition and schedule C flows
+                // Compute and schedule N flows and update mineralization accumulators.
+                //if((int) this.Type == (int) LayerType.Surface)
+                //{
+                //    this.TransferCarbon(SiteVars.SOM1surface[site], netCFlow);
+                //    this.TransferNitrogen(SiteVars.SOM1surface[site], netCFlow, litterC, ratioCNtoSOM1, site);
+                //    //PlugIn.ModelCore.UI.WriteLine("DecomposeMetabolic.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
+                //}
+                //else
+                //{
+                //}
 
-                }
+            }
         }
         ////---------------------------------------------------------------------
         //public void TransferCarbon(Layer destination, double netCFlow)

@@ -18,7 +18,7 @@ The surface litter and soil litter (both containing lignin and metabolic compone
 
 Note: Listed below are the substantive changes.  Other minor changes (names of variables, debug logging statements) located throughout the code.
 
-DAMMLayer.cs: Contains the OHorizon properties and respiration function. Should be renamed OrganicHorizonLayer.cs L362: Following Century, a fraction goes to MineralSoil (a user input).
+OHorizonLayer.cs: Contains the OHorizon properties and respiration function. L343: Following Century, a fraction goes to MineralSoil (a user input).
 
 Layer.cs:  DecomposeLignin:  Lignin C goes first to MineralSoil and the remainder to OHorizon.  This follows the Century order-of-operations.  This order could be reversed by reconsidering the meaning of OtherData.LigninRespirationRate.
 
@@ -28,7 +28,7 @@ Main.cs:  Added OHorizon decompose, L108.  Order goes from top -> down.
 
 MineralSoilLayer.cs (nee SoilLayer.cs):  The Decompose function has been radically simplified reflecting the elimination of the SOM1 and SOM3 layers.  L44:  Assume decomposition always possible.  L49: Following Century, define a fraction that goes to CO2 (this is now a user input rather than a fixed constant).  UNRESOLVED:  Where does the remainder go (L50)?
 
-Outputs.cs:  L66: Primary Log File restructured to reflect the changes above.
+Outputs.cs:  L66: Primary Log File restructured to reflect the changes above, also added all OHorizon N pools; need to add all OHorizon C pools.
 
 PlugIn.cs:  L101:  Also initialize MineralSoil layer.
 

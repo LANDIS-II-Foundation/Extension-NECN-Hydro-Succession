@@ -353,7 +353,7 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.OHorizon[site].MonthlyCarbonInputs = 0.0;  // Done with these now.
             SiteVars.OHorizon[site].MonthlyNitrogenInputs = 0.0;  // Done with these now.
 
-            double cLeached = 0.0;  // Carbon leached to a stream
+            double cLeached = 0.0;  /// Carbon leached to a stream
 
             if (SiteVars.WaterMovement[site] > 0.0)  //Volume of water moving-ML.  
             {

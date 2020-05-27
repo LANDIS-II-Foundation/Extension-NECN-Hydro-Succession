@@ -200,8 +200,12 @@ namespace Landis.Extension.Succession.NECN
             //SiteVars.SmolderConsumption[site] += carbonLoss * 2.0;  
 
             // Transfer 1% to mineral N.
-            SiteVars.MineralN[site] += summaryNLoss * 0.01;
-            
+            double Naddition = summaryNLoss * 0.01;
+            SiteVars.MineralN[site] += Naddition;
+            if(Naddition > 3.0 && PlugIn.Verbose)
+                PlugIn.ModelCore.UI.WriteLine("FireEffects.ReduceLayer: N Mineralization = {0:0.00})", Naddition);
+
+
 
         }
         //---------------------------------------------------------------------

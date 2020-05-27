@@ -86,7 +86,7 @@ namespace Landis.Extension.Succession.NECN
                     ClimateRegionData.MonthlyNDeposition[ecoregion][Month] = monthlyNdeposition;
                     ClimateRegionData.AnnualNDeposition[ecoregion] += monthlyNdeposition;
                     SiteVars.MineralN[site] += monthlyNdeposition;
-                    if(PlugIn.Verbose)
+                    if(monthlyNdeposition > 3.0 && PlugIn.Verbose)
                         PlugIn.ModelCore.UI.WriteLine("Main:  Ndeposition={0},MineralN={1:0.00}.", monthlyNdeposition, SiteVars.MineralN[site]);
 
                     double liveBiomass = (double) ComputeLivingBiomass(siteCohorts);

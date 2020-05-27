@@ -50,7 +50,7 @@ namespace Landis.Extension.Succession.NECN
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Total N", Format = "0.0")]
         public double TotalN { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "OHorizon C", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "OHorizon SOC", Format = "0.0")]
         public double C_OHorizon { get; set; }
 
         [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "MineralSoil C", Format = "0.0")]
@@ -80,8 +80,14 @@ namespace Landis.Extension.Succession.NECN
         [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Fine Root C", Format = "0.0")]
         public double C_DeadFRoot { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "OHorizon N", Format = "0.0")]
-        public double N_OHorizon { get; set; }
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "OHorizon SON", Format = "0.0")]
+        public double SON_OHorizon { get; set; }
+
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "OHorizon DON", Format = "0.0")]
+        public double DON_OHorizon { get; set; }
+
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "OHorizon MicN", Format = "0.0")]
+        public double MicrobialN_OHorizon { get; set; }
 
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "MineralSoil N", Format = "0.0")]
         public double N_MineralSoil { get; set; }

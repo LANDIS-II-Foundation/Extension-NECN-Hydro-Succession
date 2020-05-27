@@ -436,6 +436,9 @@ namespace Landis.Extension.Succession.NECN
                 //this.Nitrogen -= mineralNFlow;
 
                 SiteVars.MineralN[site] += mineralNFlow;
+                if (mineralNFlow > 3.0 && PlugIn.Verbose)
+                    PlugIn.ModelCore.UI.WriteLine("Layer.TransferNitrogen: N Mineralization = {0:0.00})", mineralNFlow);
+
             }
 
             if (mineralNFlow > 0)
@@ -490,6 +493,8 @@ namespace Landis.Extension.Succession.NECN
 
             this.Nitrogen -= mineralNFlow;
             SiteVars.MineralN[site] += mineralNFlow;
+            if (mineralNFlow > 3.0 && PlugIn.Verbose)
+                PlugIn.ModelCore.UI.WriteLine("Layer.Respiration: N Mineralization = {0:0.00})", mineralNFlow);
 
             if (PlugIn.Verbose)
             {

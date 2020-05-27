@@ -14,8 +14,6 @@ namespace Landis.Extension.Succession.NECN
     public class OHorizonLayer 
     {
 
-        //private SoilName name;
-        //private LayerType type;
         private double o_carbon;
         private double o_nitrogen;
         private double do_carbon;
@@ -25,17 +23,11 @@ namespace Landis.Extension.Succession.NECN
         private double enzymatic_concentration;
         private double monthlyCinputs;
         private double monthlyNinputs;
-        //private double decayValue;
-        //private double fractionLignin;
-        //private double netMineralization;
-        //private double grossMineralization;
 
 
         //---------------------------------------------------------------------
-        public OHorizonLayer()//, LayerType type)
+        public OHorizonLayer()
         {
-            //this.name = name;
-            //this.type = type;
             this.o_carbon = 0.0;
             this.o_nitrogen = 0.0;
             this.do_carbon = 0.0;
@@ -46,21 +38,6 @@ namespace Landis.Extension.Succession.NECN
             this.monthlyCinputs = 0.0;
 
         }
-        //---------------------------------------------------------------------
-        /// <summary>
-        /// Layer Name
-        /// </summary>
-        //public SoilName Name
-        //{
-        //    get
-        //    {
-        //        return name;
-        //    }
-        //    set
-        //    {
-        //        name = value;
-        //    }
-        //}
         //---------------------------------------------------------------------
         /// <summary>
         /// Soil Organic Carbon
@@ -278,7 +255,7 @@ namespace Landis.Extension.Succession.NECN
             double microbial_C = SiteVars.OHorizon[site].MicrobialCarbon * g_to_mg / (m2_to_cm2 * depth_to_volume);
             double microbial_N = SiteVars.OHorizon[site].MicrobialNitrogen * g_to_mg / (m2_to_cm2 * depth_to_volume);
             double enzymatic_concentration = SiteVars.OHorizon[site].EnzymaticConcentration * g_to_mg / (m2_to_cm2 * depth_to_volume);
-            double mineralN = SiteVars.MineralN[site] * g_to_mg / (m2_to_cm2 * depth_to_volume);
+            double mineralN = 0.0; // SiteVars.MineralN[site] * g_to_mg / (m2_to_cm2 * depth_to_volume);
             double cn_microbial = microbial_C / microbial_N;
             double porosity = 1.0 - (bulk_density / particle_density);          
             
@@ -298,7 +275,7 @@ namespace Landis.Extension.Succession.NECN
                 double vmax_upt = a_upt * Math.Exp(-ea_upt / (r * (SoilT + 273)));                          //calculate maximum depolymerization rate               
                 double upt_c = microbial_C * vmax_upt * DOC / (km_upt + DOC) * o2 / (km_o2 + o2);           //calculate DOC uptake
                 double c_mineralization = upt_c * (1.0 - c_use_efficiency);                                   //calculate initial C mineralization               
-                double upt_n = microbial_N * vmax_upt * DON / (km_upt + DON) * o2 / (km_o2 + o2);           //calculate DON uptake
+                double upt_n = microbial_N * vmax_upt * DON / (km_upt + DON) * o2 / (km_o2 + o2);           //calculate microbial DON uptake
                 double death_c = r_death * Math.Pow(microbial_C, 2.0);                                        //calculate density-dependent microbial C turnover
                 double death_n = r_death * Math.Pow(microbial_N, 2.0);                                        //calculate density-dependent microbial N turnover                
                 double enz_c = pconst * c_use_efficiency * upt_c;                                           //calculate potential enzyme C production
@@ -307,12 +284,16 @@ namespace Landis.Extension.Succession.NECN
 
                 double growth_c = (1 - pconst) * (upt_c * c_use_efficiency) + enz_c - cn_enzymes * eprod;   //calculate potential microbial biomass C growth
                 double growth_n = (1 - qconst) * upt_n + enz_n - eprod;                                     //calculate potential microbial biomass N growth
-                double growth = (growth_c / cn_microbial >= growth_n) ? growth_n : (growth_c / cn_microbial); //calculate actual microbial biomass growth based on Liebig's Law of the minimum (Schimel & Weintraub 2003 SBB)
+                double growth = 0.0;   //calculate actual microbial biomass growth based on Liebig's Law of the minimum (Schimel & Weintraub 2003 SBB)
+                if (growth_c / cn_microbial >= growth_n)
+                    growth = growth_n;  // N limited
+                else
+                    growth = (growth_c / cn_microbial);  // C limited
 
                 double overflow = growth_c - cn_microbial * growth;                         //calculate overflow metabolism of C
                 double nmin = growth_n - growth;                                            //calculate N mineralization
-                //if(nmin > 0.0)
-                //    PlugIn.ModelCore.UI.WriteLine(" Nmin={0}", nmin);
+                if(nmin > 0.0 && PlugIn.Verbose)
+                    PlugIn.ModelCore.UI.WriteLine("DAMM:  Nmin={0}, growth_n={1}, growth={2}", nmin, growth_n, growth);
 
                 double dmic_c = (cn_microbial * growth) - death_c;                            //calculate change in microbial C pool
                 double dmic_n = growth - death_n;                                           //calculate change in microbial N pool
@@ -329,10 +310,9 @@ namespace Landis.Extension.Succession.NECN
                 //PlugIn.ModelCore.UI.WriteLine(" DSOC:  Month={0}, LitterInput={1:0.00}, MicrobialDeath={2:0.00}, Decom_C={3:0.00}", Month, LitterCinput, (death_c * mic_to_som), decom_c);
                 //PlugIn.ModelCore.UI.WriteLine(" DSON:  Month={0}, LitterInput={1:0.00}, MicrobialDeath={2:0.00}, Decom_N={3:0.00}", Month, LitterNinput, (death_n * mic_to_som), decom_n);
 
-                double ddoc = DOCinput + decom_c + (death_c * (1.0 - mic_to_som)) + (cn_enzymes * eloss) - upt_c; //calculate change in DOC pool
-                double ddon = (DOCinput / (DOC / DON)) + decom_n + (death_n * (1.0 - mic_to_som)) + eloss - upt_n; //calculate change in DON pool
+                double ddoc = DOCinput + decom_c + death_c * (1.0 - mic_to_som) + cn_enzymes * eloss - upt_c; //calculate change in DOC pool
+                double ddon = (DOCinput / SOC / SON) + decom_n + death_n * (1.0 - mic_to_som) + eloss - upt_n; //calculate change in DON pool
 
-                // convert Rose's results to Landis units, * m2_to_cm2 / (g_to_mg)
                 SOC += dsoc;
                 SON += dson;
                 DOC += ddoc;
@@ -345,7 +325,7 @@ namespace Landis.Extension.Succession.NECN
 
             }
 
-            // adjust pools, to LANDIS units
+            // convert Rose's results to Landis units, * m2_to_cm2 / (g_to_mg)
             SiteVars.OHorizon[site].Carbon = SOC * m2_to_cm2 * depth_to_volume / (g_to_mg);
             SiteVars.OHorizon[site].Nitrogen = SON * m2_to_cm2 * depth_to_volume / (g_to_mg);
             SiteVars.OHorizon[site].DOC = DOC * m2_to_cm2 * depth_to_volume / (g_to_mg);
@@ -353,12 +333,13 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.OHorizon[site].MicrobialCarbon = microbial_C;
             SiteVars.OHorizon[site].MicrobialNitrogen = microbial_N;
             SiteVars.OHorizon[site].EnzymaticConcentration = enzymatic_concentration;
-            SiteVars.MineralN[site] = mineralN * m2_to_cm2 * depth_to_volume / (g_to_mg);
-            if(PlugIn.Verbose)
-                PlugIn.ModelCore.UI.WriteLine(" DAMM:  Month={0}, MineralN={1}", Month, SiteVars.MineralN[site]);
 
-            //SiteVars.OHorizon[site].Respiration(c_loss, site);
-            // A fraction of c_loss should go to MineralSoil
+            double Naddition = mineralN * m2_to_cm2 * depth_to_volume / (g_to_mg);
+            SiteVars.MineralN[site] += Naddition;
+            if(Naddition > 3.0 && PlugIn.Verbose)
+                PlugIn.ModelCore.UI.WriteLine("OHorizonLayer.Decompose:  Month={0}, N mineralization={1}", Month, Naddition);
+
+            // RMS:  A fraction of c_loss should go to MineralSoil
             double c_to_mineralSoil = c_loss * PlugIn.Parameters.FractionOHorizonToMineralSoil;
             SiteVars.MineralSoil[site].Carbon += c_to_mineralSoil;
             c_loss -= c_to_mineralSoil;

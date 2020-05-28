@@ -32,6 +32,8 @@ Outputs.cs:  L66: Primary Log File restructured to reflect the changes above, al
 
 PlugIn.cs:  L101:  Also initialize MineralSoil layer.
 
+InputParametersParser:  ADDITIONAL PARAMETERS LIST ROB TO DO
+
 
 
 

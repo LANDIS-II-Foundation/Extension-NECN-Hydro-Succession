@@ -46,7 +46,7 @@ FractionOHorizonToMineralSoil	0.55 << default value from Century:  Calibration t
 FractionMineralSoilToCO2	0.55 << Dummy
 DecayRateMineralSoil		1.0	<< Dummy
 
->>Dispersal parameters
+>>Dispersal parameters.
 SeedingAlgorithm  WardSeedDispersal
 ProbabilityEstablishAdjust 	1.0	<< AFRI
 SmokeModelOutputs yes

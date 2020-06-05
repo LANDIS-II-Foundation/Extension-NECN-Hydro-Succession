@@ -1,7 +1,7 @@
 LandisData  Scenario
 
 
-Duration  50
+Duration  10
 
 Species   species_LTB.txt
 
@@ -25,7 +25,7 @@ CellLength  100 << meters, 100 x 100 m = 1 hectare
 
 >> --------------------     -------------------
   
-"NECN Succession"     NECN_LTBvalues_landscape.txt
+"NECN Succession DAMM"     NECN_LTB_DAMM.txt
 
 
 
@@ -35,7 +35,7 @@ CellLength  100 << meters, 100 x 100 m = 1 hectare
 >> ----------------------   -------------------
 
 "Biomass Harvest"	biomass-harvest_SetUp_s2e1.txt
-"SCRAPPLE"		SCRAPPLE_BAU.txt
+>>"SCRAPPLE"		SCRAPPLE_BAU.txt
 
 >>   DisturbancesRandomOrder  yes  << optional parameter; default = no
 

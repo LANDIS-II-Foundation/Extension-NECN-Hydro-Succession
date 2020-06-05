@@ -1,13 +1,17 @@
-LandisData	"NECN Succession"
+LandisData	"NECN Succession DAMM"
 
 Timestep  1
+CalibrateMode 	no
 
-SeedingAlgorithm  WardSeedDispersal
+ClimateConfigFile 	climate-generator-baseline.txt	
+AtmosphericNSlope			0.05
+AtmosphericNIntercept		0.05
 
 InitialCommunities      "./initial-communities_LTB.txt"
 InitialCommunitiesMap   "./initial-communities.gis"
-ClimateConfigFile 	climate-generator-baseline.txt	
+Latitude					44.0
 
+>>Soil maps 
 SoilDepthMapName				random110.img 
 SoilDrainMapName				constantpoint75.img 
 SoilBaseFlowMapName				constantpoint4.img 
@@ -16,36 +20,36 @@ SoilFieldCapacityMapName		random_point1_point2.img
 SoilWiltingPointMapName			random_point05_point099.img
 SoilPercentSandMapName			random_point01_point5.img
 SoilPercentClayMapName			random_point01_point5.img
-InitialSOM1CsurfMapName			random110.img
-InitialSOM1NsurfMapName			random6.img
-InitialSOM1CsoilMapName			random110.img
-InitialSOM1NsoilMapName			random9.img
-InitialSOM2CMapName				random4500.img
-InitialSOM2NMapName				random145.img
-InitialSOM3CMapName				random1294.img
-InitialSOM3NMapName				random50.img
-InitialDeadWoodSurfaceMapName	random110.img 
-InitialDeadCoarseRootsMapName	random50.img
+SoilBulkDensityMapName			random_point1_point2.img
+SoilParticleDensityMapName		random6.img
+Initial_OHorizon_C_MapName		random4500.img
+Initial_OHorizon_N_MapName		random50.img
+Initial_MineralSoil_C_MapName		random4500.img
+Initial_MineralSoil_N_MapName		random50.img
+InitialDeadWoodSurfaceMapName	random1294.img
+InitialDeadCoarseRootsMapName	random1294.img
 
+WaterDecayFunction Linear <<Linear or Ratio  
+InitialFineFuels		0.1
+InitialMineralN			1.697   << This came from Smith et al. 2000 Table 4 (old burn values)
+InitialDOC			3.0  <<arbitrary and small
+DenitrificationRate		0.0 <<01  << Calibration target
 
+FractionLitterToDOC		0.066          << some fraction of litter goes immediately to DOC << Calibration target
+MicrobialTurnoverRate		0.0001437  << aka 'r_deather': Calibration target
+FractionUnprotectedSOM		0.0004048 << aka 'frac':  Calibration target
+EnzymeTurnoverRate		0.00095780  << aka 'r_ecloss': Calibration target
+CarbonUseEfficiency		0.357329 << aka 'c_use_efficiency':  Calibration target
+ProportionEnymeActing		0.522748  << aka 'p_enz_SOC:  Calibration target
+FractionMicrobialToSOM		0.551334  << aka 'mic_to_som': Calibration target
+FractionOHorizonToMineralSoil	0.55 << default value from Century:  Calibration target?
+FractionMineralSoilToCO2	0.55 << Dummy
+DecayRateMineralSoil		1.0	<< Dummy
 
-
-CalibrateMode 	no
+>>Dispersal parameters
+SeedingAlgorithm  WardSeedDispersal
+ProbabilityEstablishAdjust 	1.0	<< AFRI
 SmokeModelOutputs yes
-WaterDecayFunction Ratio <<Linear or Ratio
-
-
-ProbabilityEstablishAdjust 	1.0
-InitialMineralN				2.0
-InitialFineFuels 		0.1  << a fraction 0-1.0 of dead wood.
-AtmosphericNSlope			0.05
-AtmosphericNIntercept		0.05
-Latitude					44.0
-DenitrificationRate			0.001
-DecayRateSurf				0.01
-DecayRateSOM1				0.01
-DecayRateSOM2				0.2
-DecayRateSOM3				0.001
 
 
 MaximumLAI

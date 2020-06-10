@@ -58,7 +58,7 @@ namespace Landis.Extension.Succession.NECN
         private double carbonUseEfficiency;
         private double proportionEnymeActing;
         private double fractionMicrobialToSOM;
-        private double fractionOHorizonToMineralSoil;
+        private double fractionDOCtoMineralSoil;
         private double fractionMineralSoilToCO2;
         private double decayRateMineralSoil;
 
@@ -456,7 +456,7 @@ namespace Landis.Extension.Succession.NECN
         public double CarbonUseEfficiency { get { return carbonUseEfficiency;  } }
         public double ProportionEnzymeActing { get { return proportionEnymeActing;  } }
         public double FractionMicrobialToOHorizon { get { return fractionMicrobialToSOM;  } }
-        public double FractionOHorizonToMineralSoil { get { return fractionOHorizonToMineralSoil; } }
+        public double FractionDOCtoMineralSoil { get { return fractionDOCtoMineralSoil; } }
         public double FractionMineralSoilToCO2 { get { return fractionMineralSoilToCO2; } }
         public double DecayRateMineralSoil { get { return decayRateMineralSoil;  } }
 
@@ -946,7 +946,7 @@ namespace Landis.Extension.Succession.NECN
         //---------------------------------------------------------------------
         public void SetFractionOHtoMS(InputValue<double> newValue)
         {
-            fractionOHorizonToMineralSoil = CheckBiomassParm(newValue, 0.0, 1.0);
+            fractionDOCtoMineralSoil = CheckBiomassParm(newValue, 0.0, 1.0);
         }
         //---------------------------------------------------------------------
         public void SetFractionMStoCO2(InputValue<double> newValue)

@@ -221,11 +221,11 @@ namespace Landis.Extension.Succession.NECN
             ReadVar(fMSOM);
             parameters.SetFractionMicrobialToSOM(fMSOM.Value);
 
-            InputVar<double> fOHMS = new InputVar<double>("FractionOHorizonToMineralSoil");
+            InputVar<double> fOHMS = new InputVar<double>("FractionDOCtoMineralSoil");
             ReadVar(fOHMS);
             parameters.SetFractionOHtoMS(fOHMS.Value);
 
-            InputVar<double> fMSCO2 = new InputVar<double>("FractionMineralSoilToCO2");
+            InputVar<double> fMSCO2 = new InputVar<double>("FractionMineralSoilCFlowToCO2");
             ReadVar(fMSCO2);
             parameters.SetFractionMStoCO2(fMSCO2.Value);
 

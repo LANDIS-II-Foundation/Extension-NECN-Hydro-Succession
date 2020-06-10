@@ -33,12 +33,6 @@ namespace Landis.Extension.Succession.NECN
         string Initial_MineralSoil_N_MapName { get; set; }
         string InitialDeadSurfaceMapName { get; set; }
         string InitialDeadSoilMapName { get; set; }       
-        //string InitialSOM1CSurfaceMapName { get; set; }
-        //string InitialSOM1NSurfaceMapName { get; set; }
-        //string InitialSOM2CMapName { get; set; }
-        //string InitialSOM2NMapName { get; set; }
-        //string InitialSOM3CMapName { get; set; }
-        //string InitialSOM3NMapName { get; set; }
 
         bool CalibrateMode { get; set; }
         WaterType WType {get;set;}
@@ -119,7 +113,7 @@ namespace Landis.Extension.Succession.NECN
         double CarbonUseEfficiency { get; }
         double ProportionEnzymeActing { get; }
         double FractionMicrobialToOHorizon { get; }
-        double FractionOHorizonToMineralSoil { get; }
+        double FractionDOCtoMineralSoil { get; }
         double FractionMineralSoilToCO2 { get; }
         double DecayRateMineralSoil { get; }
 

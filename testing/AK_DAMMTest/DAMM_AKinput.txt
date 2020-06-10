@@ -28,8 +28,8 @@ SoilBulkDensityMapName			./SingleCellRasters/singlecell_point1.tif
 SoilParticleDensityMapName		./SingleCellRasters/ParticleDensity.tif
 Initial_OHorizon_C_MapName			./SingleCellRasters/singlecell_4600.tif
 Initial_OHorizon_N_MapName			./SingleCellRasters/singlecell_60.tif
-Initial_MineralSoil_C_MapName			./SingleCellRasters/singlecell_4600.tif
-Initial_MineralSoil_N_MapName			./SingleCellRasters/singlecell_60.tif
+Initial_MineralSoil_C_MapName			./SingleCellRasters/singlecell_2.tif
+Initial_MineralSoil_N_MapName			./SingleCellRasters/singlecell_1.tif
 InitialDeadWoodSurfaceMapName	./SingleCellRasters/singlecell_1500.tif
 InitialDeadCoarseRootsMapName	./SingleCellRasters/singlecell_1600.tif
 
@@ -52,9 +52,9 @@ EnzymeTurnoverRate		0.00095780  << aka 'r_ecloss': Calibration target
 CarbonUseEfficiency		0.357329 << aka 'c_use_efficiency':  Calibration target
 ProportionEnymeActing		0.522748  << aka 'p_enz_SOC:  Calibration target
 FractionMicrobialToSOM		0.551334  << aka 'mic_to_som': Calibration target
-FractionOHorizonToMineralSoil	0.55 << default value from Century:  Calibration target?
-FractionMineralSoilToCO2	0.55 << Dummy
-DecayRateMineralSoil		1.0	<< Dummy
+FractionDOCtoMineralSoil	0.0005    << Calibration target?
+FractionMineralSoilCFlowToCO2	0.9 << Dummy
+DecayRateMineralSoil		0.9	<< Dummy
 
 >>Dispersal parameters
 SeedingAlgorithm  WardSeedDispersal

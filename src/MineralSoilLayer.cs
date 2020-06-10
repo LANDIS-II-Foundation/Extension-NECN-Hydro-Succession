@@ -21,12 +21,6 @@ namespace Landis.Extension.Succession.NECN
 
             if (som2c < 0.0000001)
                 return;
-            //
-            // Determine C/N ratios for flows to SOM1
-            //double ratioCNto1 = Layer.BelowgroundDecompositionRatio(site,
-            //                        OtherData.MinCNenterSOM1, 
-            //                        OtherData.MaxCNenterSOM1,
-            //                        OtherData.MinContentN_SOM1);
 
             double anerb = SiteVars.AnaerobicEffect[site];  
 
@@ -38,18 +32,43 @@ namespace Landis.Extension.Succession.NECN
                             * OtherData.MonthAdjust;
             ////PlugIn.ModelCore.UI.WriteLine("som2c={0:0.00}, decayFactor={1:0.00}, decayRateSOM2={2:0.00}, anerb={3:0.00}, monthAdj={4:0.00}", som2c, SiteVars.DecayFactor[site], ClimateRegionData.DecayRateSOM2[ecoregion], anerb, OtherData.MonthAdjust);
 
-            //// If SOM2 can decompose to SOM1, it will also go to SOM3.
-            //// If it can't go to SOM1, it can't decompose at all.
-
-            //if (SiteVars.SOM2[site].DecomposePossible(ratioCNto1, SiteVars.MineralN[site]))
-            //    //PlugIn.ModelCore.UI.WriteLine("DecomposePoss.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
-            //{
-
             //CO2 loss - Compute and schedule respiration flows
             double co2loss = totalCflow * PlugIn.Parameters.FractionMineralSoilToCO2;
             double netCFlow = totalCflow - co2loss;
             SiteVars.MineralSoil[site].Respiration(co2loss, site);
             //PlugIn.ModelCore.UI.WriteLine("AfterTransferto.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
+
+            // Leaching next -----------------------------------------------------------
+
+            double cLeached = 0.0;  /// Carbon leached to a stream
+
+            if (SiteVars.WaterMovement[site] > 0.0)  //Volume of water moving-ML.  
+            {
+
+                double leachTextureEffect = OtherData.OMLeachIntercept + OtherData.OMLeachSlope * SiteVars.SoilPercentSand[site];
+
+                double indexWaterMovement = SiteVars.WaterMovement[site] / (SiteVars.SoilDepth[site] * SiteVars.SoilFieldCapacity[site]);
+
+                cLeached = netCFlow * leachTextureEffect * indexWaterMovement;
+
+                //Partition and schedule C flows 
+                if (cLeached > SiteVars.MineralSoil[site].Carbon)
+                    cLeached = SiteVars.MineralSoil[site].Carbon;
+
+                //round these to avoid unexpected behavior
+                SiteVars.MineralSoil[site].Carbon = Math.Round((SiteVars.MineralSoil[site].Carbon - cLeached));
+                SiteVars.Stream[site].Carbon = Math.Round((SiteVars.Stream[site].Carbon + cLeached));
+
+                // Compute and schedule N flows and update mineralization accumulators
+                double ratioCN_MineralSoil = SiteVars.MineralSoil[site].Carbon / SiteVars.MineralSoil[site].Nitrogen;
+                double orgflow = cLeached / ratioCN_MineralSoil;
+
+                SiteVars.MineralSoil[site].Nitrogen -= orgflow;
+                SiteVars.Stream[site].Nitrogen += orgflow;
+
+                SiteVars.MonthlyStreamN[site][Main.Month] += orgflow;
+            }
+
 
             return;
         }

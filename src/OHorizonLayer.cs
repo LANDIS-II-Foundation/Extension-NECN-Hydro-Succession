@@ -339,10 +339,9 @@ namespace Landis.Extension.Succession.NECN
             if(Naddition > 3.0 && PlugIn.Verbose)
                 PlugIn.ModelCore.UI.WriteLine("OHorizonLayer.Decompose:  Month={0}, N mineralization={1}", Month, Naddition);
 
-            // RMS:  A fraction of c_loss should go to MineralSoil
-            double c_to_mineralSoil = c_loss * PlugIn.Parameters.FractionOHorizonToMineralSoil;
+            // RMS:  A fraction of DOC should go to MineralSoil
+            double c_to_mineralSoil = SiteVars.OHorizon[site].DOC * PlugIn.Parameters.FractionDOCtoMineralSoil;
             SiteVars.MineralSoil[site].Carbon += c_to_mineralSoil;
-            c_loss -= c_to_mineralSoil;
 
             // SourceSink = NEE
             SiteVars.SourceSink[site].Carbon += Math.Round((SiteVars.SourceSink[site].Carbon + c_loss));
@@ -353,35 +352,6 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.OHorizon[site].MonthlyCarbonInputs = 0.0;  // Done with these now.
             SiteVars.OHorizon[site].MonthlyNitrogenInputs = 0.0;  // Done with these now.
 
-            double cLeached = 0.0;  /// Carbon leached to a stream
-
-            if (SiteVars.WaterMovement[site] > 0.0)  //Volume of water moving-ML.  
-            {
-
-                double leachTextureEffect = OtherData.OMLeachIntercept + OtherData.OMLeachSlope * SiteVars.SoilPercentSand[site];
-
-                double indexWaterMovement = SiteVars.WaterMovement[site] / (SiteVars.SoilDepth[site] * SiteVars.SoilFieldCapacity[site]);
-
-                cLeached = c_loss * leachTextureEffect * indexWaterMovement;
-
-                //Partition and schedule C flows 
-                if (cLeached > SiteVars.OHorizon[site].Carbon)
-                    cLeached = SiteVars.OHorizon[site].Carbon;
-
-                //round these to avoid unexpected behavior
-                SiteVars.OHorizon[site].Carbon = Math.Round((SiteVars.OHorizon[site].Carbon - cLeached));
-                SiteVars.Stream[site].Carbon = Math.Round((SiteVars.Stream[site].Carbon + cLeached));
-
-                // Compute and schedule N flows and update mineralization accumulators
-                // Need to use the ratio for som1 for organic leaching
-                double ratioCN_SoilPrimary = SiteVars.OHorizon[site].Carbon / SiteVars.OHorizon[site].Nitrogen;
-                double orgflow = cLeached / ratioCN_SoilPrimary;
-
-                SiteVars.OHorizon[site].Nitrogen -= orgflow;
-                SiteVars.Stream[site].Nitrogen += orgflow;
-
-                SiteVars.MonthlyStreamN[site][Main.Month] += orgflow;
-            }
 
         }
         public void Respiration(double c_loss, ActiveSite site)
@@ -393,7 +363,7 @@ namespace Landis.Extension.Succession.NECN
                 c_loss = this.Carbon;
 
             // Some fraction of c_loss should go to MineralSoil
-            double c_to_mineralSoil = c_loss* PlugIn.Parameters.FractionOHorizonToMineralSoil;
+            double c_to_mineralSoil = c_loss* PlugIn.Parameters.FractionDOCtoMineralSoil;
             SiteVars.MineralSoil[site].Carbon += c_to_mineralSoil;
             c_loss -= c_to_mineralSoil;
 

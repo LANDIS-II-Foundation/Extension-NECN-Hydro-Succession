@@ -32,8 +32,14 @@ namespace Landis.Extension.Succession.NECN
         [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Aboveground NPP C", Format = "0.00")]
         public double avgNPPtc { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Aboveground Heterotrophic Respiration", Format = "0.00")]
-        public double avgResp { get; set; }
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "OHorizon Respiration", Format = "0.00")]
+        public double avgOHorizonResp { get; set; }
+
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Mineral Soil Respiration", Format = "0.00")]
+        public double avgMineralSoilResp { get; set; }
+
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Other Heterotrophic Respiration", Format = "0.00")]
+        public double avgOtherResp { get; set; }
 
         [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Net Ecosystem Exchange", Format = "0.00")]
         public double avgNEE { get; set; }

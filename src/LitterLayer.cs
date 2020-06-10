@@ -114,7 +114,7 @@ namespace Landis.Extension.Succession.NECN
             if (cAddToMetabolic < 0.0)
                 cAddToMetabolic = 0.0;
 
-            if((int) type == (int) LayerType.Surface)
+            if((int) type == (int) LayerType.SurfaceLitter)
             {
                 SiteVars.SurfaceMetabolic[site].Carbon += cAddToMetabolic;
              }
@@ -132,14 +132,14 @@ namespace Landis.Extension.Succession.NECN
             //      which is lignin; restricting it to a maximum of .8
             fracStructuralLignin = fracLignin / (cAddToStructural / totalC);
 
-            if((int) type == (int) LayerType.Surface && cAddToMetabolic <= 0.0)
+            if((int) type == (int) LayerType.SurfaceLitter && cAddToMetabolic <= 0.0)
                 //PlugIn.ModelCore.UI.WriteLine("   SURFACE cAddToMetabolic={0}.", cAddToMetabolic);
 
             // ...Changed allowable maximum fraction from .6 to 1.0  -lh 1/93
             if (fracStructuralLignin > 1.0)
                 fracStructuralLignin = 1.0;
 
-            if((int) type == (int) LayerType.Surface)
+            if((int) type == (int) LayerType.SurfaceLitter)
             {
                 SiteVars.SurfaceStructural[site].Carbon += cAddToStructural;
             }
@@ -151,7 +151,7 @@ namespace Landis.Extension.Succession.NECN
             // ...Adjust lignin in Structural Layers
             Layer structuralLayer;
 
-            if((int) type == (int) LayerType.Surface)
+            if((int) type == (int) LayerType.SurfaceLitter)
                 structuralLayer = SiteVars.SurfaceStructural[site];
             else
                 structuralLayer = SiteVars.SoilStructural[site];
@@ -168,7 +168,7 @@ namespace Landis.Extension.Succession.NECN
             NAddToStructural = cAddToStructural / ratioCNstructural;  //RATIO CN STRUCTURAL from species data
             NAddToMetabolic = totalNitrogen - NAddToStructural;
 
-            if((int) type == (int) LayerType.Surface)
+            if((int) type == (int) LayerType.SurfaceLitter)
             {
                 SiteVars.SurfaceStructural[site].Nitrogen += NAddToStructural;
                 SiteVars.SurfaceMetabolic[site].Nitrogen += NAddToMetabolic;

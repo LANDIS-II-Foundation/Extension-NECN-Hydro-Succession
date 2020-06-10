@@ -333,6 +333,7 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.OHorizon[site].MicrobialCarbon = microbial_C;
             SiteVars.OHorizon[site].MicrobialNitrogen = microbial_N;
             SiteVars.OHorizon[site].EnzymaticConcentration = enzymatic_concentration;
+            c_loss *= m2_to_cm2 * depth_to_volume / (g_to_mg);
 
             double Naddition = mineralN * m2_to_cm2 * depth_to_volume / (g_to_mg);
             SiteVars.MineralN[site] += Naddition;
@@ -347,7 +348,7 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.SourceSink[site].Carbon += Math.Round((SiteVars.SourceSink[site].Carbon + c_loss));
 
             //Add lost CO2 to monthly heterotrophic respiration
-            SiteVars.MonthlyResp[site][Main.Month] += c_loss * m2_to_cm2 * depth_to_volume / (g_to_mg);
+            SiteVars.MonthlyOHorizonResp[site][Main.Month] += c_loss;
 
             SiteVars.OHorizon[site].MonthlyCarbonInputs = 0.0;  // Done with these now.
             SiteVars.OHorizon[site].MonthlyNitrogenInputs = 0.0;  // Done with these now.
@@ -371,7 +372,7 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.SourceSink[site].Carbon = Math.Round((SiteVars.SourceSink[site].Carbon + c_loss));
 
             //Add lost CO2 to monthly heterotrophic respiration
-            SiteVars.MonthlyResp[site][Main.Month] += c_loss;
+            SiteVars.MonthlyOHorizonResp[site][Main.Month] += c_loss;
 
             return;
         }

@@ -86,7 +86,9 @@ namespace Landis.Extension.Succession.NECN
         public static ISiteVar<double> FireCEfflux;
         public static ISiteVar<double> FireNEfflux;
         public static ISiteVar<double> Nvol;
-        private static ISiteVar<double[]> monthlyResp;
+        public static ISiteVar<double[]> MonthlyOHorizonResp;
+        public static ISiteVar<double[]> MonthlyMineralSoilResp;
+        public static ISiteVar<double[]> MonthlyOtherResp;
         private static ISiteVar<double> totalNuptake;
         private static ISiteVar<double[]> monthlymineralN;
         private static ISiteVar<double> frassC;
@@ -177,9 +179,11 @@ namespace Landis.Extension.Succession.NECN
             AnnualNEE           = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             FireCEfflux         = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             FireNEfflux         = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
-            monthlyResp         = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            MonthlyOHorizonResp    = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            MonthlyMineralSoilResp = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            MonthlyOtherResp = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
 
-            cohortLeafN         = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
+            cohortLeafN = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             cohortFRootN         = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             cohortLeafC         = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             cohortFRootC     = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
@@ -201,7 +205,6 @@ namespace Landis.Extension.Succession.NECN
             SmolderConsumption = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             FlamingConsumption = PlugIn.ModelCore.Landscape.NewSiteVar<double>(); 
             HarvestPrescriptionName = PlugIn.ModelCore.GetSiteVar<string>("Harvest.PrescriptionName");
-            //HarvestTime = PlugIn.ModelCore.GetSiteVar<int>("Harvest.TimeOfLastEvent");
             HarvestTime = PlugIn.ModelCore.Landscape.NewSiteVar<int>();
 
             CohortResorbedNallocation = PlugIn.ModelCore.Landscape.NewSiteVar<Dictionary<int, Dictionary<int, double>>>();
@@ -216,17 +219,15 @@ namespace Landis.Extension.Succession.NECN
 
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape)
             {
-                surfaceDeadWood[site]       = new Layer(LayerName.Wood, LayerType.Surface);
+                surfaceDeadWood[site]       = new Layer(LayerName.Wood, LayerType.SurfaceLitter);
                 soilDeadWood[site]          = new Layer(LayerName.CoarseRoot, LayerType.Soil);
                 
-                surfaceStructural[site]     = new Layer(LayerName.Structural, LayerType.Surface);
-                surfaceMetabolic[site]      = new Layer(LayerName.Metabolic, LayerType.Surface);
-                soilStructural[site]        = new Layer(LayerName.Structural, LayerType.Soil);
-                soilMetabolic[site]         = new Layer(LayerName.Metabolic, LayerType.Soil);
-                oHorizon[site]              = new OHorizonLayer(); //, LayerType.Soil);
-                //som1surface[site]           = new Layer(LayerName.SOM1, LayerType.Surface);
-                //som2[site]                  = new Layer(LayerName.SOM2, LayerType.Soil);
-                mineralSoil[site]                  = new Layer(LayerName.Mineral, LayerType.Soil);
+                surfaceStructural[site]     = new Layer(LayerName.Structural, LayerType.SurfaceLitter);
+                surfaceMetabolic[site]      = new Layer(LayerName.Metabolic, LayerType.SurfaceLitter);
+                soilStructural[site]        = new Layer(LayerName.Structural, LayerType.SoilLitter);
+                soilMetabolic[site]         = new Layer(LayerName.Metabolic, LayerType.SoilLitter);
+                oHorizon[site]              = new OHorizonLayer(); 
+                mineralSoil[site]           = new Layer(LayerName.Mineral, LayerType.Soil);
 
                 stream[site]                = new Layer(LayerName.Other, LayerType.Other);
                 sourceSink[site]            = new Layer(LayerName.Other, LayerType.Other);
@@ -235,7 +236,9 @@ namespace Landis.Extension.Succession.NECN
                 monthlyBGNPPC[site]           = new double[12];
                 monthlyNEE[site]            = new double[12];
                 monthlyStreamN[site]         = new double[12];
-                monthlyResp[site]           = new double[12];
+                MonthlyOHorizonResp[site]           = new double[12];
+                MonthlyMineralSoilResp[site] = new double[12];
+                MonthlyOtherResp[site] = new double[12];
                 monthlyLAI[site] = new double[12];
                 //monthlymineralN[site]       = new double[12];
 
@@ -322,18 +325,6 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.Stream[site]          = new Layer(LayerName.Other, LayerType.Other);
             SiteVars.SourceSink[site]      = new Layer(LayerName.Other, LayerType.Other);
             
-            //SiteVars.SurfaceDeadWood[site].NetMineralization = 0.0;
-            //SiteVars.SurfaceStructural[site].NetMineralization = 0.0;
-            //SiteVars.SurfaceMetabolic[site].NetMineralization = 0.0;
-            
-            //SiteVars.SoilDeadWood[site].NetMineralization = 0.0;
-            //SiteVars.SoilStructural[site].NetMineralization = 0.0;
-            //SiteVars.SoilMetabolic[site].NetMineralization = 0.0;
-            
-            //SiteVars.SOM1surface[site].NetMineralization = 0.0;
-            //SiteVars.SoilPrimary[site].NetMineralization = 0.0;
-            //SiteVars.SOM2[site].NetMineralization = 0.0;
-            //SiteVars.SOM3[site].NetMineralization = 0.0;
             SiteVars.AnnualNEE[site] = 0.0;
             SiteVars.Nvol[site] = 0.0;
             SiteVars.AnnualNEE[site] = 0.0;
@@ -344,10 +335,6 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.AnnualPPT_AET[site] = 0.0;
             SiteVars.AnnualClimaticWaterDeficit[site] = 0.0;
             SiteVars.WoodMortality[site] = 0.0;
-            //SiteVars.DryDays[site] = 0;
-
-            //SiteVars.FireEfflux[site] = 0.0;
-                        
 
         }
 
@@ -853,19 +840,7 @@ namespace Landis.Extension.Succession.NECN
                 monthlyBGNPPC = value;
             }
         }
-        //---------------------------------------------------------------------
-        /// <summary>
-        /// A summary of heterotrophic respiration, i.e. CO2 loss from decomposition (g C/m2)
-        /// </summary>
-        public static ISiteVar<double[]> MonthlyResp
-        {
-            get {
-                return monthlyResp;
-            }
-            set {
-                monthlyResp = value;
-            }
-        }
+        
         //---------------------------------------------------------------------
         /// <summary>
         /// A summary of Net Ecosystem Exchange (g C/m2), from a flux tower's perspective,

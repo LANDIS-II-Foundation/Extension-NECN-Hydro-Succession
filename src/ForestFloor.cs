@@ -30,7 +30,7 @@ namespace Landis.Extension.Succession.NECN
                             SpeciesData.WoodCN[species], 
                             SpeciesData.WoodLignin[species], 
                             LayerName.Wood,
-                            LayerType.Surface,
+                            LayerType.SurfaceLitter,
                             site);
             
         }
@@ -62,7 +62,7 @@ namespace Landis.Extension.Succession.NECN
                             SpeciesData.LeafLignin[species],
                             OtherData.StructuralCN,
                             LayerName.Leaf,
-                            LayerType.Surface,
+                            LayerType.SurfaceLitter,
                             site);
             }
 
@@ -92,7 +92,7 @@ namespace Landis.Extension.Succession.NECN
                             SpeciesData.LeafLignin[species],
                             OtherData.StructuralCN,
                             LayerName.Leaf,
-                            LayerType.Surface,
+                            LayerType.SurfaceLitter,
                             site);
             }
         }
@@ -132,7 +132,7 @@ namespace Landis.Extension.Succession.NECN
                             0.1,
                             OtherData.StructuralCN,
                             LayerName.Leaf,
-                            LayerType.Surface,
+                            LayerType.SurfaceLitter,
                             site);
             }
         } 

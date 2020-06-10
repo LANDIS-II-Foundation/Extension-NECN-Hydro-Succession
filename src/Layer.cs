@@ -11,7 +11,7 @@ namespace Landis.Extension.Succession.NECN
 {
 
     public enum LayerName { Leaf, FineRoot, Wood, CoarseRoot, Metabolic, Structural, Mineral, Other }; 
-    public enum LayerType {Surface, Soil, Other} 
+    public enum LayerType {SurfaceLitter, SoilLitter, Soil, Other} 
 
     /// <summary>
     /// A Century soil model carbon and nitrogen pool.
@@ -146,7 +146,7 @@ namespace Landis.Extension.Succession.NECN
 
                 double anerb = SiteVars.AnaerobicEffect[site];
 
-                if (this.Type == LayerType.Surface) anerb = 1.0; // No anaerobic effect on surface material
+                if (this.Type == LayerType.SurfaceLitter) anerb = 1.0; // No anaerobic effect on surface material
 
                 //Compute total C flow out of structural in layer
                 double totalCFlow = System.Math.Min(this.Carbon, OtherData.MaxStructuralC)
@@ -204,7 +204,7 @@ namespace Landis.Extension.Succession.NECN
                 carbonToOHorizon = totalCFlow - carbonToMineralSoil;
 
                 //MicrobialRespiration associated with decomposition to OHorizon
-                if (this.Type == LayerType.Surface)
+                if (this.Type == LayerType.SurfaceLitter)
                     co2loss = carbonToOHorizon * OtherData.StructuralToCO2Surface;
                 else
                     co2loss = carbonToOHorizon * OtherData.StructuralToCO2Soil;
@@ -217,17 +217,6 @@ namespace Landis.Extension.Succession.NECN
                 SiteVars.OHorizon[site].MonthlyCarbonInputs += Math.Round(carbonToOHorizon, 2);  //rounding to avoid unexpected behavior
                 SiteVars.OHorizon[site].MonthlyNitrogenInputs += this.TransferNitrogen(carbonToOHorizon, litterC, ratioCN, site);
 
-
-                //if(this.Type == LayerType.Surface)
-                //{
-                //    this.TransferCarbon(SiteVars.SOM1surface[site], carbonToSOM1);
-                //    this.TransferNitrogen(SiteVars.SOM1surface[site], carbonToSOM1, litterC, ratioCN, site);
-                //}
-                //else
-                //{
-                //this.TransferCarbon(SiteVars.OHorizon[site], carbonToOHorizon);
-                //    this.TransferNitrogen(SiteVars.OHorizon[site], carbonToOHorizon, litterC, ratioCN, site);
-                //}
             }
             //PlugIn.ModelCore.UI.WriteLine("Decompose2.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
             return;
@@ -251,7 +240,7 @@ namespace Landis.Extension.Succession.NECN
             double co2loss = 0.0;
 
             // Compute ratios for surface  metabolic residue
-            if (this.Type == LayerType.Surface)
+            if (this.Type == LayerType.SurfaceLitter)
                 ratioCNtoSoils = Layer.AbovegroundDecompositionRatio(this.Nitrogen, litterC);
 
             //Compute ratios for soil metabolic residue
@@ -287,7 +276,7 @@ namespace Landis.Extension.Succession.NECN
             if (this.DecomposePossible(ratioCNtoSoils, SiteVars.MineralN[site]))
             {
                 //CO2 loss
-                if (this.Type == LayerType.Surface)
+                if (this.Type == LayerType.SurfaceLitter)
                     co2loss = totalCFlow * OtherData.MetabolicToCO2Surface;
                 else
                     co2loss = totalCFlow * OtherData.MetabolicToCO2Soil;
@@ -489,7 +478,10 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.SourceSink[site].Carbon = Math.Round((SiteVars.SourceSink[site].Carbon + co2loss));
 
             //Add loss CO2 to monthly heterotrophic respiration
-            SiteVars.MonthlyResp[site][Main.Month] += co2loss;
+            if(this.Type == LayerType.Soil)
+                SiteVars.MonthlyMineralSoilResp[site][Main.Month] += co2loss;
+            else
+                SiteVars.MonthlyOtherResp[site][Main.Month] += co2loss;
 
             this.Nitrogen -= mineralNFlow;
             SiteVars.MineralN[site] += mineralNFlow;

@@ -41,8 +41,8 @@ namespace Landis.Extension.Succession.NECN
         [DataFieldAttribute(Unit = FieldUnits.g_C_m2_yr1, Desc = "Litterfall C", Format = "0.0")]
         public double Litterfall { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_B_m2_yr1, Desc = "Age Mortality Biomass", Format = "0.0")]
-        public double AgeMortality { get; set; }
+        [DataFieldAttribute(Unit = FieldUnits.g_B_m2_yr1, Desc = "Wood Mortality Biomass", Format = "0.0")]
+        public double WoodMortality { get; set; }
         
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Mineral N", Format = "0.00")]
         public double MineralN { get; set; }

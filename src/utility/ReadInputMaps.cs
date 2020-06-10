@@ -420,14 +420,6 @@ namespace Landis.Extension.Succession.NECN
                     }
                 }
             }
-            // RMS: Initialize other components with small values:
-            foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
-            {
-                SiteVars.OHorizon[site].EnzymaticConcentration = 0.001;
-                SiteVars.OHorizon[site].MicrobialCarbon = 0.00001;
-                SiteVars.OHorizon[site].MicrobialNitrogen = 0.000001;
-            }
-
 
         }
         ////---------------------------------------------------------------------

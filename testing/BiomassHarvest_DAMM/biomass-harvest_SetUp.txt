@@ -43,8 +43,8 @@ Prescription PatchCutting
 >>	Mgmt Area	Prescription		Harvest Area	BeginTime	EndTime
 >> 	---------   	------------   		------------   	---------- 	--------
 	1		PatchCutting	20%	
-	2		PatchCutting	20%	
->>	1		MaxAgeClearcut			20%	
+>>	2		PatchCutting	20%	
+	1		MaxAgeClearcut			20%	
 >>	2		MaxAgeClearcut			20%	
 
 

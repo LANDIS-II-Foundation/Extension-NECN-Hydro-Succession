@@ -262,10 +262,10 @@ namespace Landis.Extension.Succession.NECN
 
             SiteVars.WoodMortality[site] += (M_AGE_wood);
 
-            if(M_AGE_wood < 0.0 || M_AGE_leaf < 0.0)
+            if(M_AGE_wood < 0.0 || M_AGE_leaf < 0.0 || M_AGE_wood >= cohort.WoodBiomass)
             {
                 PlugIn.ModelCore.UI.WriteLine("Mwood={0}, Mleaf={1}.", M_AGE_wood, M_AGE_leaf);
-                throw new ApplicationException("Error: Woody or Leaf Age Mortality is < 0");
+                throw new ApplicationException("Error: Woody or Leaf Age Mortality is not within range");
             }
 
             if (PlugIn.ModelCore.CurrentTime > 0 && OtherData.CalibrateMode)
@@ -279,24 +279,28 @@ namespace Landis.Extension.Succession.NECN
         /// <summary>
         /// Monthly mortality as a function of standing leaf and wood biomass.
         /// </summary>
-        //private double[] ComputeGrowthMortality(ICohort cohort, ActiveSite site)
         private double[] ComputeGrowthMortality(ICohort cohort, ActiveSite site, double siteBiomass, double[] AGNPP)
         {
 
             double maxBiomass = SpeciesData.Max_Biomass[cohort.Species];
             double NPPwood = (double)AGNPP[0];
             
-            double M_wood = cohort.WoodBiomass * FunctionalType.Table[SpeciesData.FuncType[cohort.Species]].MonthlyWoodMortality;
+            double M_wood_monthly = cohort.WoodBiomass * FunctionalType.Table[SpeciesData.FuncType[cohort.Species]].MonthlyWoodMortality;
+            //PlugIn.ModelCore.UI.WriteLine("M_wood_monthly_mortality={0}.", FunctionalType.Table[SpeciesData.FuncType[cohort.Species]].MonthlyWoodMortality);
+
+
             double M_leaf = 0.0;
 
             double relativeBiomass = siteBiomass / maxBiomass;
             double M_constant = 5.0;  //This constant controls the rate of change of mortality with NPP
 
             //Functon which calculates an adjustment factor for mortality that ranges from 0 to 1 and exponentially increases with relative biomass.
-            double M_wood_relative = Math.Max(0.0, (Math.Exp(M_constant * relativeBiomass) - 1) / (Math.Exp(M_constant) - 1));
+            double growing_space_limit = Math.Min(1.0, Math.Max(0.0, (Math.Exp(M_constant * relativeBiomass) - 1.0) / (Math.Exp(M_constant) - 1.0)));
 
-            //This function calculates mortality as a function of NPP 
-             M_wood = NPPwood * M_wood_relative;
+            //PlugIn.ModelCore.UI.WriteLine("Growing space limit={0}, relativeBiomass={1}.", growing_space_limit, relativeBiomass);
+
+            //This function calculates mortality as a function of NPP; it cannot exceed NPP
+            double M_wood = (NPPwood * growing_space_limit) + M_wood_monthly;
 
             // Leaves and Needles dropped.
             if (SpeciesData.LeafLongevity[cohort.Species] > 1.0) 
@@ -313,16 +317,16 @@ namespace Landis.Extension.Succession.NECN
                 }
                 if (Main.Month +2 > FunctionalType.Table[SpeciesData.FuncType[cohort.Species]].LeafNeedleDrop)
                 {
-                    M_leaf = cohort.LeafBiomass;  //drop the remainder
+                    M_leaf = cohort.LeafBiomass;  //drop the remainding leaves
                 }
             }
 
             double[] M_BIO = new double[2]{M_wood, M_leaf};
 
-            if(M_wood < 0.0 || M_leaf < 0.0)
+            if(M_wood < 0.0 || M_leaf < 0.0 || M_wood > cohort.WoodBiomass)
             {
-                PlugIn.ModelCore.UI.WriteLine("Mwood={0}, Mleaf={1}.", M_wood, M_leaf);
-                throw new ApplicationException("Error: Wood or Leaf Growth Mortality is < 0");
+                PlugIn.ModelCore.UI.WriteLine("M_wood={0}, Mleaf={1}.", M_wood, M_leaf);
+                throw new ApplicationException("Error: Wood or Leaf Growth Mortality is outside range");
             }
 
             if (PlugIn.ModelCore.CurrentTime > 0 && OtherData.CalibrateMode)

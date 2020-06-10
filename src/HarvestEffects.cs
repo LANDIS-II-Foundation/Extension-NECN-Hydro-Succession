@@ -223,16 +223,16 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.SurfaceDeadWood[site].Nitrogen -= nitrogenLoss;
             SiteVars.SourceSink[site].Nitrogen        += nitrogenLoss;
 
-            // Soil Organic Matter (Duff)
+            // Organic Horizon
 
-            //carbonLoss = Math.Round(SiteVars.SOM1surface[site].Carbon * som_Multiplier, 2);
-            //nitrogenLoss = Math.Round(SiteVars.SOM1surface[site].Nitrogen * som_Multiplier, 2);
+            carbonLoss = Math.Round(SiteVars.OHorizon[site].Carbon * som_Multiplier, 2);
+            nitrogenLoss = Math.Round(SiteVars.OHorizon[site].Nitrogen * som_Multiplier, 2);
 
-            //SiteVars.SOM1surface[site].Carbon -= carbonLoss;
-            //SiteVars.SourceSink[site].Carbon += carbonLoss;
+            SiteVars.OHorizon[site].Carbon -= carbonLoss;
+            SiteVars.SourceSink[site].Carbon += carbonLoss;
 
-            //SiteVars.SOM1surface[site].Nitrogen -= nitrogenLoss;
-            //SiteVars.SourceSink[site].Nitrogen += nitrogenLoss;
+            SiteVars.OHorizon[site].Nitrogen -= nitrogenLoss;
+            SiteVars.SourceSink[site].Nitrogen += nitrogenLoss;
 
         }
 

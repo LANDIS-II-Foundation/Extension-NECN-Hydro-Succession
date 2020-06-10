@@ -100,6 +100,14 @@ namespace Landis.Extension.Succession.NECN
             //Util.ReadDoubleMap(Parameters.SoilParticleDensityMapName);
             ReadInputMaps.ReadSoilCNMaps(Parameters.Initial_OHorizon_C_MapName, Parameters.Initial_OHorizon_N_MapName, Parameters.Initial_MineralSoil_C_MapName, Parameters.Initial_MineralSoil_N_MapName);
             ReadInputMaps.ReadDeadWoodMaps(Parameters.InitialDeadSurfaceMapName, Parameters.InitialDeadSoilMapName);
+            // RMS: Initialize other components with small values:
+            foreach (ActiveSite site in PlugIn.ModelCore.Landscape.ActiveSites)
+            {
+                SiteVars.OHorizon[site].EnzymaticConcentration = 0.001;
+                SiteVars.OHorizon[site].MicrobialCarbon = 0.00001;
+                SiteVars.OHorizon[site].MicrobialNitrogen = 0.000001;
+            }
+
 
             //Initialize climate.
             Climate.Initialize(Parameters.ClimateConfigFile, false, modelCore);

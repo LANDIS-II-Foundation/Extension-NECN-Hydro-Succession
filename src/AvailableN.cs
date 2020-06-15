@@ -171,7 +171,7 @@ namespace Landis.Extension.Succession.NECN
         {
             AvailableN.CohortMineralNallocation = new Dictionary<int, Dictionary<int, double>>();
             
-           double availableN = SiteVars.MineralN[site];  // g/m2
+           double availableN = SiteVars.MineralSoil[site].Nitrogen;  // g/m2
            Math.Max(availableN, 0.01);
                                    
             foreach (ISpeciesCohorts speciesCohorts in SiteVars.Cohorts[site])
@@ -310,19 +310,19 @@ namespace Landis.Extension.Succession.NECN
             // Reduce available N after taking into account that some N may have been provided
             // via resorption (above).
             double Nuptake = 0.0;
-            if (SiteVars.MineralN[site] >= adjNdemand)
+            if (SiteVars.MineralSoil[site].Nitrogen >= adjNdemand)
             {
-                SiteVars.MineralN[site] -= adjNdemand;
+                SiteVars.MineralSoil[site].Nitrogen -= adjNdemand;
                 //mineralNused = adjNdemand;
                 Nuptake = adjNdemand;
             }
 
             else
             {
-                adjNdemand = SiteVars.MineralN[site];
-                //mineralNused = SiteVars.MineralN[site];
-                SiteVars.MineralN[site] = 0.0;
-                Nuptake = SiteVars.MineralN[site];                
+                adjNdemand = SiteVars.MineralSoil[site].Nitrogen;
+                //mineralNused = SiteVars.MineralSoil[site].Nitrogen;
+                SiteVars.MineralSoil[site].Nitrogen = 0.0;
+                Nuptake = SiteVars.MineralSoil[site].Nitrogen;                
             }
             
             SiteVars.TotalNuptake[site] += Nuptake;

@@ -41,105 +41,105 @@ namespace Landis.Extension.Succession.NECN
         [DataFieldAttribute(Unit = FieldUnits.g_C_m2_yr1, Desc = "Litterfall C", Format = "0.0")]
         public double Litterfall { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_B_m2_yr1, Desc = "Wood Mortality Biomass", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_B_m2_yr1, Desc = "Wood Mortality Biomass", Format = "0.00")]
         public double WoodMortality { get; set; }
         
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Mineral N", Format = "0.00")]
         public double MineralN { get; set; }
         
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Total N", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Total N", Format = "0.00")]
         public double TotalN { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "OHorizon SOC", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "OHorizon SOC", Format = "0.00")]
         public double C_OHorizon { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "MineralSoil C", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "MineralSoil C", Format = "0.00")]
         public double C_MineralSoil { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Live Leaf C", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Live Leaf C", Format = "0.00")]
         public double C_LiveLeaf { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Live Fine Root C", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Live Fine Root C", Format = "0.00")]
         public double C_LiveFRoot { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Live Wood C", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Live Wood C", Format = "0.00")]
         public double C_LiveWood { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Live Coarse Root C", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Live Coarse Root C", Format = "0.00")]
         public double C_LiveCRoot { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Wood C", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Wood C", Format = "0.00")]
         public double C_DeadWood { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Coarse Root C", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Coarse Root C", Format = "0.00")]
         public double C_DeadCRoot { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Leaf C", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Leaf C", Format = "0.00")]
         public double C_DeadLeaf { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Fine Root C", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Fine Root C", Format = "0.00")]
         public double C_DeadFRoot { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "OHorizon SON", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "OHorizon SON", Format = "0.00")]
         public double SON_OHorizon { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "OHorizon DON", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "OHorizon DON", Format = "0.00")]
         public double DON_OHorizon { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "OHorizon MicN", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "OHorizon MicN", Format = "0.00")]
         public double MicrobialN_OHorizon { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "MineralSoil N", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "MineralSoil N", Format = "0.00")]
         public double N_MineralSoil { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Leaf N", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Leaf N", Format = "0.00")]
         public double N_Leaf { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Fine Root N", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Fine Root N", Format = "0.00")]
         public double N_FRoot { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Wood N", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Wood N", Format = "0.00")]
         public double N_Wood { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Coarse Root N", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Coarse Root N", Format = "0.00")]
         public double N_CRoot { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Wood N", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Wood N", Format = "0.00")]
         public double N_DeadWood { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Coarse Root N", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Coarse Root N", Format = "0.00")]
         public double N_DeadCRoot { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Leaf N", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Leaf N", Format = "0.00")]
         public double N_DeadLeaf { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Fine Root N", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Fine Root N", Format = "0.00")]
         public double N_DeadFRoot { get; set; }
 
 
-        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Surface Structural Net Mineralization", Format = "0.0")]
+        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Surface Structural Net Mineralization", Format = "0.00")]
         //public double SurfStrucNetMin { get; set; }
 
-        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Surface Metabolic Net Mineralization", Format = "0.0")]
+        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Surface Metabolic Net Mineralization", Format = "0.00")]
         //public double SurfMetaNetMin { get; set; }
 
-        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Soil Structural Net Mineralization", Format = "0.0")]
+        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Soil Structural Net Mineralization", Format = "0.00")]
         //public double SoilStrucNetMin { get; set; }
 
-        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Soil Metabolic Net Mineralization", Format = "0.0")]
+        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Soil Metabolic Net Mineralization", Format = "0.00")]
         //public double SoilMetaNetMin { get; set; }
 
         //log.Write("SOM1surfNetMin, SoilPrimaryNetMin, SOM2NetMin, SOM3NetMin, ");
-        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM1 Surface Net Mineralization", Format = "0.0")]
+        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM1 Surface Net Mineralization", Format = "0.00")]
         //public double SOM1surfNetMin { get; set; }
 
-        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM1 Soil Net Mineralization", Format = "0.0")]
+        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM1 Soil Net Mineralization", Format = "0.00")]
         //public double SoilPrimaryNetMin { get; set; }
 
-        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM2 Net Mineralization", Format = "0.0")]
+        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM2 Net Mineralization", Format = "0.00")]
         //public double SOM2NetMin { get; set; }
 
-        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM3 Net Mineralization", Format = "0.0")]
+        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM3 Net Mineralization", Format = "0.00")]
         //public double SOM3NetMin { get; set; }
 
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Total Nitrogen Deposition per Timestep", Format = "0.00")]
@@ -152,26 +152,26 @@ namespace Landis.Extension.Succession.NECN
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Stream N", Format = "0.00")]
         public double StreamN { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Fire C Efflux", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Fire C Efflux", Format = "0.00")]
         public double FireCEfflux { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Fire N Efflux", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Fire N Efflux", Format = "0.00")]
         public double FireNEfflux { get; set; }
         
         //log.Write("Nuptake, Nresorbed, TotalSoilN, Nvol, avgfrassC,");
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "N Uptake", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "N Uptake", Format = "0.00")]
         public double Nuptake { get; set; }
         
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "N Resorbed", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "N Resorbed", Format = "0.00")]
         public double Nresorbed { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Total Soil N", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Total Soil N", Format = "0.00")]
         public double TotalSoilN { get; set; }
 
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "N Volatilized", Format = "0.00")]
         public double Nvol { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Frass C", Format = "0.0")]
+        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Frass C", Format = "0.00")]
         public double FrassC { get; set; }
 
     }

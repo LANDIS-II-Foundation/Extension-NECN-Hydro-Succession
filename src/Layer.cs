@@ -174,7 +174,7 @@ namespace Landis.Extension.Succession.NECN
             //If it can't decompose to SOM1, it can't decompose at all.
 
             //If Wood Object can decompose
-            if (this.DecomposePossible(ratioCN, SiteVars.MineralN[site]))
+            if (this.DecomposePossible(ratioCN, SiteVars.MineralSoil[site].Nitrogen))
             {
 
                 // Decompose Wood Object to MineralSoil
@@ -218,7 +218,7 @@ namespace Landis.Extension.Succession.NECN
                 SiteVars.OHorizon[site].MonthlyNitrogenInputs += this.TransferNitrogen(carbonToOHorizon, litterC, ratioCN, site);
 
             }
-            //PlugIn.ModelCore.UI.WriteLine("Decompose2.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
+            //PlugIn.ModelCore.UI.WriteLine("Decompose2.  MineralN={0:0.00}.", SiteVars.MineralSoil[site].Nitrogen);
             return;
         }
 
@@ -273,7 +273,7 @@ namespace Landis.Extension.Succession.NECN
                 totalCFlow = litterC;
 
             //If decomposition can occur,
-            if (this.DecomposePossible(ratioCNtoSoils, SiteVars.MineralN[site]))
+            if (this.DecomposePossible(ratioCNtoSoils, SiteVars.MineralSoil[site].Nitrogen))
             {
                 //CO2 loss
                 if (this.Type == LayerType.SurfaceLitter)
@@ -307,7 +307,7 @@ namespace Landis.Extension.Succession.NECN
                 //{
                 //    this.TransferCarbon(SiteVars.SOM1surface[site], netCFlow);
                 //    this.TransferNitrogen(SiteVars.SOM1surface[site], netCFlow, litterC, ratioCNtoSOM1, site);
-                //    //PlugIn.ModelCore.UI.WriteLine("DecomposeMetabolic.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
+                //    //PlugIn.ModelCore.UI.WriteLine("DecomposeMetabolic.  MineralN={0:0.00}.", SiteVars.MineralSoil[site].Nitrogen);
                 //}
                 //else
                 //{
@@ -372,29 +372,29 @@ namespace Landis.Extension.Succession.NECN
                 nitrogenInputs = NFlow;
 
                 if(PlugIn.Verbose)
-                    PlugIn.ModelCore.UI.WriteLine("TransferNitrogen: Before immobilization: MineralN={0:0.00}, ImmobileN={1:0.000}.", SiteVars.MineralN[site],immobileN);
+                    PlugIn.ModelCore.UI.WriteLine("TransferNitrogen: Before immobilization: MineralN={0:0.00}, ImmobileN={1:0.000}.", SiteVars.MineralSoil[site].Nitrogen,immobileN);
 
                 // Schedule flow from mineral pool to immobileN
                 // Don't allow mineral N to go to zero or negative.- ML
 
-                if (immobileN > SiteVars.MineralN[site])
-                    immobileN = SiteVars.MineralN[site] - 0.01; //leave some small amount of mineral N
+                if (immobileN > SiteVars.MineralSoil[site].Nitrogen)
+                    immobileN = SiteVars.MineralSoil[site].Nitrogen - 0.01; //leave some small amount of mineral N
 
 
-                SiteVars.MineralN[site] -= immobileN;
+                SiteVars.MineralSoil[site].Nitrogen -= immobileN;
                 if (PlugIn.Verbose)
-                    PlugIn.ModelCore.UI.WriteLine("TransferNitrogen: After immobilization: MineralN={0:0.00}.", SiteVars.MineralN[site]);
+                    PlugIn.ModelCore.UI.WriteLine("TransferNitrogen: After immobilization: MineralN={0:0.00}.", SiteVars.MineralSoil[site].Nitrogen);
                 
                 //destination.Nitrogen += immobileN;
                 nitrogenInputs += immobileN;
 
-                //PlugIn.ModelCore.UI.WriteLine("AdjustImmobil.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
+                //PlugIn.ModelCore.UI.WriteLine("AdjustImmobil.  MineralN={0:0.00}.", SiteVars.MineralSoil[site].Nitrogen);
                 //PlugIn.ModelCore.UI.WriteLine("   TransferN immobileN={0:0.000}, C={1:0.000}, N={2:0.000}, ratioCN={3:0.000}.", immobileN, CFlow, NFlow, ratioCNtoDestination);
                 //PlugIn.ModelCore.UI.WriteLine("     source={0}-{1}, destination={2}-{3}.", this.Name, this.Type, destination.Name, destination.Type);
 
                 //...Return mineralization value.
                 mineralNFlow = -1 * immobileN;
-                //PlugIn.ModelCore.UI.WriteLine("MineralNflow.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
+                //PlugIn.ModelCore.UI.WriteLine("MineralNflow.  MineralN={0:0.00}.", SiteVars.MineralSoil[site].Nitrogen);
             }
             else
 
@@ -424,7 +424,7 @@ namespace Landis.Extension.Succession.NECN
 
                 //this.Nitrogen -= mineralNFlow;
 
-                SiteVars.MineralN[site] += mineralNFlow;
+                SiteVars.MineralSoil[site].Nitrogen += mineralNFlow;
                 if (mineralNFlow > 3.0 && PlugIn.Verbose)
                     PlugIn.ModelCore.UI.WriteLine("Layer.TransferNitrogen: N Mineralization = {0:0.00})", mineralNFlow);
 
@@ -484,7 +484,7 @@ namespace Landis.Extension.Succession.NECN
                 SiteVars.MonthlyOtherResp[site][Main.Month] += co2loss;
 
             this.Nitrogen -= mineralNFlow;
-            SiteVars.MineralN[site] += mineralNFlow;
+            SiteVars.MineralSoil[site].Nitrogen += mineralNFlow;
             if (mineralNFlow > 3.0 && PlugIn.Verbose)
                 PlugIn.ModelCore.UI.WriteLine("Layer.Respiration: N Mineralization = {0:0.00})", mineralNFlow);
 
@@ -585,7 +585,7 @@ namespace Landis.Extension.Succession.NECN
             //Determine ratio of C/N of new material entering 'Box B'.
             //Ratio depends on available N
 
-            double mineralN = SiteVars.MineralN[site];
+            double mineralN = SiteVars.MineralSoil[site].Nitrogen;
 
             if (mineralN <= 0.0)
                 bgdrat = maxCNenter;  // Set ratio to maximum allowed (HIGHEST carbon, LOWEST nitrogen)

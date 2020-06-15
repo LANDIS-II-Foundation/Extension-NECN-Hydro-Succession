@@ -59,10 +59,10 @@ namespace Landis.Extension.Succession.NECN
             //      using flow routines.)
 
             // ...If minerl(SRFC,iel) is negative then directAbsorb = zero.
-            if (SiteVars.MineralN[site] <= 0.0)
+            if (SiteVars.MineralSoil[site].Nitrogen <= 0.0)
                 directAbsorb  = 0.0;
             else
-                directAbsorb = SiteVars.MineralN[site]
+                directAbsorb = SiteVars.MineralSoil[site].Nitrogen
                                 * OtherData.FractionSurfNAbsorbed
                                 * System.Math.Max(totalC / OtherData.ResidueMaxDirectAbsorb, 1.0);
 
@@ -80,10 +80,10 @@ namespace Landis.Extension.Succession.NECN
             if (directAbsorb  < 0.0)
                 directAbsorb  = 0.0;
 
-            if(directAbsorb > SiteVars.MineralN[site])
-                directAbsorb = SiteVars.MineralN[site];
+            if(directAbsorb > SiteVars.MineralSoil[site].Nitrogen)
+                directAbsorb = SiteVars.MineralSoil[site].Nitrogen;
 
-            SiteVars.MineralN[site] -= directAbsorb;
+            SiteVars.MineralSoil[site].Nitrogen -= directAbsorb;
 
             totalNitrogen = directAbsorb + Npart;
 

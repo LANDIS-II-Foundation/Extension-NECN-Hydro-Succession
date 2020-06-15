@@ -48,7 +48,7 @@ namespace Landis.Extension.Succession.NECN
         private double latitude;
         private double denitrif;
         private double[] maximumShadeLAI;
-        private double initMineralN;
+        //private double initMineralN;
         private double initDOC;
         private double initFineFuels;
         private double fractionLitterDecayToDOC;
@@ -446,7 +446,7 @@ namespace Landis.Extension.Succession.NECN
                 return denitrif;
             }
         }
-        public double InitialMineralN { get { return initMineralN; } }
+        //public double InitialMineralN { get { return initMineralN; } }
         public double InitialDOC { get { return initDOC; } }
         public double InitialFineFuels { get { return initFineFuels; } }
         public double FractionLitterDecayToDOC { get { return fractionLitterDecayToDOC; } }
@@ -894,10 +894,10 @@ namespace Landis.Extension.Succession.NECN
         }
 
         //---------------------------------------------------------------------
-        public void SetInitMineralN(InputValue<double> newValue)
-        {
-            initMineralN = CheckBiomassParm(newValue, 0.0, 50.0);
-        }
+        //public void SetInitMineralN(InputValue<double> newValue)
+        //{
+        //    initMineralN = CheckBiomassParm(newValue, 0.0, 50.0);
+        //}
         //---------------------------------------------------------------------
         public void SetInitDOC(InputValue<double> newValue)
         {

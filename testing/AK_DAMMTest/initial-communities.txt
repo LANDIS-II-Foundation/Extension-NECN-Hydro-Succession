@@ -2,4 +2,4 @@ LandisData   "Initial Communities"
 
 
 MapCode  10
-BlackSpruce 110 (4405) 120 (4405) 
+BlackSpruce 40 (4405) 60 (4405) 

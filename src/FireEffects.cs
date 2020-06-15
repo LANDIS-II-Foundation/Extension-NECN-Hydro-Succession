@@ -201,7 +201,7 @@ namespace Landis.Extension.Succession.NECN
 
             // Transfer 1% to mineral N.
             double Naddition = summaryNLoss * 0.01;
-            SiteVars.MineralN[site] += Naddition;
+            SiteVars.MineralSoil[site].Nitrogen += Naddition;
             if(Naddition > 3.0 && PlugIn.Verbose)
                 PlugIn.ModelCore.UI.WriteLine("FireEffects.ReduceLayer: N Mineralization = {0:0.00})", Naddition);
 

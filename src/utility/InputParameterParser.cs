@@ -179,9 +179,9 @@ namespace Landis.Extension.Succession.NECN
             ReadVar(iFF);
             parameters.SetInitFineFuels(iFF.Value);
 
-            InputVar<double> iMN = new InputVar<double>("InitialMineralN");
-            ReadVar(iMN);
-            parameters.SetInitMineralN(iMN.Value);
+            //InputVar<double> iMN = new InputVar<double>("InitialMineralN");
+            //ReadVar(iMN);
+            //parameters.SetInitMineralN(iMN.Value);
 
             InputVar<double> iDOC = new InputVar<double>("InitialDOC");
             ReadVar(iDOC);

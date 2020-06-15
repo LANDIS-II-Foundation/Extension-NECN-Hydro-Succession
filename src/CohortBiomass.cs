@@ -260,8 +260,6 @@ namespace Landis.Extension.Succession.NECN
 
             double[] M_AGE = new double[2]{M_AGE_wood, M_AGE_leaf};
 
-            SiteVars.WoodMortality[site] += (M_AGE_wood);
-
             if(M_AGE_wood < 0.0 || M_AGE_leaf < 0.0 || M_AGE_wood >= cohort.WoodBiomass)
             {
                 PlugIn.ModelCore.UI.WriteLine("Mwood={0}, Mleaf={1}.", M_AGE_wood, M_AGE_leaf);
@@ -270,6 +268,9 @@ namespace Landis.Extension.Succession.NECN
 
             if (PlugIn.ModelCore.CurrentTime > 0 && OtherData.CalibrateMode)
                 Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},", M_AGE_wood, M_AGE_leaf);
+
+            SiteVars.WoodMortality[site] += (M_AGE_wood);
+            SiteVars.LitterfallC[site] += (M_AGE_leaf * 0.47);
 
 
             return M_AGE;
@@ -333,6 +334,7 @@ namespace Landis.Extension.Succession.NECN
                 Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},", M_wood, M_leaf);
 
             SiteVars.WoodMortality[site] += (M_wood);
+            SiteVars.LitterfallC[site] += (M_leaf * 0.47);
 
             return M_BIO;
 

@@ -473,6 +473,10 @@ namespace Landis.Extension.Succession.NECN
                         SiteVars.SoilMetabolic[site].Carbon = SiteVars.SurfaceDeadWood[site].Carbon * 0.15 * PlugIn.Parameters.InitialFineFuels;
                         SiteVars.SoilMetabolic[site].Nitrogen = SiteVars.SoilMetabolic[site].Carbon / 10.0;  // a generic metabolic CN ratio
 
+                        SiteVars.SurfaceStructural[site].Carbon = SiteVars.SurfaceDeadWood[site].Carbon * 0.85 * PlugIn.Parameters.InitialFineFuels;
+                        SiteVars.SurfaceStructural[site].Nitrogen = SiteVars.SurfaceStructural[site].Carbon / OtherData.StructuralCN;
+                        SiteVars.SurfaceMetabolic[site].Carbon = SiteVars.SurfaceDeadWood[site].Carbon * 0.15 * PlugIn.Parameters.InitialFineFuels;
+                        SiteVars.SurfaceMetabolic[site].Nitrogen = SiteVars.SoilMetabolic[site].Carbon / 10.0;  // a generic metabolic CN ratio
                     }
                 }
             }

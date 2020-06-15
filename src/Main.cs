@@ -56,7 +56,7 @@ namespace Landis.Extension.Succession.NECN
                     {
                         AvailableN.CalculateMineralNfraction(site);
                     }
-                    //PlugIn.ModelCore.UI.WriteLine("SiteVars.MineralN = {0:0.00}, month = {1}.", SiteVars.MineralN[site], i);
+                    //PlugIn.ModelCore.UI.WriteLine("SiteVars.MineralN = {0:0.00}, month = {1}.", SiteVars.MineralSoil[site].Nitrogen, i);
 
                     Month = months[MonthCnt];
 
@@ -87,9 +87,9 @@ namespace Landis.Extension.Succession.NECN
 
                     ClimateRegionData.MonthlyNDeposition[ecoregion][Month] = monthlyNdeposition;
                     ClimateRegionData.AnnualNDeposition[ecoregion] += monthlyNdeposition;
-                    SiteVars.MineralN[site] += monthlyNdeposition;
+                    SiteVars.MineralSoil[site].Nitrogen += monthlyNdeposition;
                     if(monthlyNdeposition > 3.0 && PlugIn.Verbose)
-                        PlugIn.ModelCore.UI.WriteLine("Main:  Ndeposition={0},MineralN={1:0.00}.", monthlyNdeposition, SiteVars.MineralN[site]);
+                        PlugIn.ModelCore.UI.WriteLine("Main:  Ndeposition={0},MineralN={1:0.00}.", monthlyNdeposition, SiteVars.MineralSoil[site].Nitrogen);
 
                     double liveBiomass = (double) ComputeLivingBiomass(siteCohorts);
                     double baseFlow, stormFlow, AET;
@@ -114,11 +114,11 @@ namespace Landis.Extension.Succession.NECN
                     // ML added a correction factor for wetlands since their denitrification rate is double that of wetlands
                     // based on a review paper by Seitziner 2006.
 
-                    double volatilize = (SiteVars.MineralN[site] * PlugIn.Parameters.DenitrificationRate); 
+                    double volatilize = (SiteVars.MineralSoil[site].Nitrogen * PlugIn.Parameters.DenitrificationRate); 
 
-                    //PlugIn.ModelCore.UI.WriteLine("BeforeVol.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
+                    //PlugIn.ModelCore.UI.WriteLine("BeforeVol.  MineralN={0:0.00}.", SiteVars.MineralSoil[site].Nitrogen);
 
-                    SiteVars.MineralN[site] -= volatilize;
+                    SiteVars.MineralSoil[site].Nitrogen -= volatilize;
                     SiteVars.SourceSink[site].Nitrogen += volatilize;
                     SiteVars.Nvol[site] += volatilize;
 

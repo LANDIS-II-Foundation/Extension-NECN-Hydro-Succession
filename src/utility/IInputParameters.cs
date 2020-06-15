@@ -103,7 +103,7 @@ namespace Landis.Extension.Succession.NECN
         double AtmosNintercept {get;}
         double Latitude {get;}
         double DenitrificationRate { get; }
-        double InitialMineralN { get; }
+        //double InitialMineralN { get; }
         double InitialDOC { get; }
         double InitialFineFuels { get; }
         double FractionLitterDecayToDOC { get; }

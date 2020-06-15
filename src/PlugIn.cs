@@ -226,7 +226,7 @@ namespace Landis.Extension.Succession.NECN
         {
 
             InitialBiomass initialBiomass = InitialBiomass.Compute(site, initialCommunity);
-            SiteVars.MineralN[site] = Parameters.InitialMineralN;
+            //SiteVars.MineralSoil[site].Nitrogen = Parameters.InitialMineralN;
             SiteVars.OHorizon[site].DOC = Parameters.InitialDOC;
             SiteVars.OHorizon[site].DON = SiteVars.OHorizon[site].DOC / OHorizonLayer.CN_DOCN;
         }
@@ -236,7 +236,7 @@ namespace Landis.Extension.Succession.NECN
         //{
 
         //    InitialBiomass initialBiomass = InitialBiomass.Compute(site, initialCommunity);
-        //    SiteVars.MineralN[site] = Parameters.InitialMineralN;
+        //    SiteVars.MineralSoil[site].Nitrogen = Parameters.InitialMineralN;
         //    SiteVars.SoilPrimary[site].DOC = Parameters.InitialDOC;
         //    SiteVars.SoilPrimary[site].DON = SiteVars.SoilPrimary[site].DOC / SoilLayer.CN_DOCN;
         //}

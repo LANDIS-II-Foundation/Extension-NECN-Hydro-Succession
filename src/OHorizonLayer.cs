@@ -248,14 +248,15 @@ namespace Landis.Extension.Succession.NECN
 
             //PlugIn.ModelCore.UI.WriteLine(" SoilLayer:  Month={0}, SoilT={1:0.00}, SoilMoisture={2:0.00}, LitterC={3:0.00}, LitterN={4:0.00}", Month, SoilT, SoilMoisture, LitterCinput, LitterNinput);
 
+            double mineralN = SiteVars.MineralSoil[site].Nitrogen * g_to_mg / (m2_to_cm2 * depth_to_volume);
             double SOC = SiteVars.OHorizon[site].Carbon * g_to_mg / (m2_to_cm2 * depth_to_volume);
             double SON = SiteVars.OHorizon[site].Nitrogen * g_to_mg / (m2_to_cm2 * depth_to_volume);
             double DOC = SiteVars.OHorizon[site].DOC * g_to_mg / (m2_to_cm2 * depth_to_volume);
-            double DON = SiteVars.OHorizon[site].DON * g_to_mg / (m2_to_cm2 * depth_to_volume);
+            double DON = (SiteVars.OHorizon[site].DON * g_to_mg / (m2_to_cm2 * depth_to_volume));
             double microbial_C = SiteVars.OHorizon[site].MicrobialCarbon * g_to_mg / (m2_to_cm2 * depth_to_volume);
             double microbial_N = SiteVars.OHorizon[site].MicrobialNitrogen * g_to_mg / (m2_to_cm2 * depth_to_volume);
             double enzymatic_concentration = SiteVars.OHorizon[site].EnzymaticConcentration * g_to_mg / (m2_to_cm2 * depth_to_volume);
-            double mineralN = 0.0; // SiteVars.MineralN[site] * g_to_mg / (m2_to_cm2 * depth_to_volume);
+            double Naddition = 0.0;
             double cn_microbial = microbial_C / microbial_N;
             double porosity = 1.0 - (bulk_density / particle_density);          
             
@@ -270,7 +271,7 @@ namespace Landis.Extension.Succession.NECN
                 soilm = (soilm < 0.1) ? 0.1 : soilm;                                                        //set lower bound on soil moisture               
                 double o2 = dgas * o2airfrac * Math.Pow((porosity - soilm), (4.0 / 3.0));                   //calculate oxygen concentration
                 double sol_soc = dliq * Math.Pow(soilm, 3) * frac * SOC;
-                double sol_son = dliq * Math.Pow(soilm, 3) * frac * SON;                                    //calculate unprotected SON
+                double sol_son = (dliq * Math.Pow(soilm, 3) * frac * SON);                       //calculate unprotected SON
                 double vmax_dep = a_dep * Math.Exp(-ea_dep / (r * (SoilT + 273)));                          //calculate maximum depolymerization rate                
                 double vmax_upt = a_upt * Math.Exp(-ea_upt / (r * (SoilT + 273)));                          //calculate maximum depolymerization rate               
                 double upt_c = microbial_C * vmax_upt * DOC / (km_upt + DOC) * o2 / (km_o2 + o2);           //calculate DOC uptake
@@ -320,7 +321,7 @@ namespace Landis.Extension.Succession.NECN
                 microbial_C += dmic_c;
                 microbial_N += dmic_n;
                 enzymatic_concentration += dec;
-                mineralN += nmin;
+                Naddition += nmin;
                 c_loss += c_mineralization + overflow;
 
             }
@@ -335,8 +336,8 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.OHorizon[site].EnzymaticConcentration = enzymatic_concentration;
             c_loss *= m2_to_cm2 * depth_to_volume / (g_to_mg);
 
-            double Naddition = mineralN * m2_to_cm2 * depth_to_volume / (g_to_mg);
-            SiteVars.MineralN[site] += Naddition;
+            Naddition *= m2_to_cm2 * depth_to_volume / (g_to_mg);
+            SiteVars.MineralSoil[site].Nitrogen += Naddition;
             if(Naddition > 3.0 && PlugIn.Verbose)
                 PlugIn.ModelCore.UI.WriteLine("OHorizonLayer.Decompose:  Month={0}, N mineralization={1}", Month, Naddition);
 

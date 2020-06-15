@@ -41,7 +41,7 @@ namespace Landis.Extension.Succession.NECN
                 avgSOMtc += GetOrganicHorizonCarbon(site) / PlugIn.ModelCore.Landscape.ActiveSiteCount; 
                 avgAGB += (double) Main.ComputeLivingBiomass(SiteVars.Cohorts[site]) / PlugIn.ModelCore.Landscape.ActiveSiteCount; 
                 avgAGNPPtc += SiteVars.AGNPPcarbon[site] / PlugIn.ModelCore.Landscape.ActiveSiteCount;
-                avgMineralN += SiteVars.MineralN[site] / PlugIn.ModelCore.Landscape.ActiveSiteCount;
+                avgMineralN += SiteVars.MineralSoil[site].Nitrogen / PlugIn.ModelCore.Landscape.ActiveSiteCount;
                 avgDeadWoodC += SiteVars.SurfaceDeadWood[site].Carbon / PlugIn.ModelCore.Landscape.ActiveSiteCount;
 
             }
@@ -238,7 +238,7 @@ namespace Landis.Extension.Succession.NECN
                 avgLittertc[ecoregion.Index] += SiteVars.LitterfallC[site];
                 avgAgeMortality[ecoregion.Index] += SiteVars.WoodMortality[site];
 
-                avgMineralN[ecoregion.Index] += SiteVars.MineralN[site];
+                avgMineralN[ecoregion.Index] += SiteVars.MineralSoil[site].Nitrogen;
                 avgTotalN[ecoregion.Index] += GetTotalNitrogen(site);
                 //avgGrossMin[ecoregion.Index] += SiteVars.GrossMineralization[site];
 
@@ -538,7 +538,7 @@ namespace Landis.Extension.Succession.NECN
                         {
                             if (site.IsActive)
                             {
-                                pixel.MapCode.Value = (short)(SiteVars.MineralN[site]);
+                                pixel.MapCode.Value = (short)(SiteVars.MineralSoil[site].Nitrogen);
                             }
                             else
                             {
@@ -727,7 +727,7 @@ namespace Landis.Extension.Succession.NECN
                     + SiteVars.CohortWoodN[site]
                     + SiteVars.CohortCRootN[site] 
 
-                    + SiteVars.MineralN[site]
+                    + SiteVars.MineralSoil[site].Nitrogen
                     
                     + SiteVars.SurfaceDeadWood[site].Nitrogen
                     + SiteVars.SoilDeadWood[site].Nitrogen
@@ -739,7 +739,7 @@ namespace Landis.Extension.Succession.NECN
                     + SiteVars.OHorizon[site].Nitrogen
                     + SiteVars.OHorizon[site].MicrobialNitrogen
                     + SiteVars.OHorizon[site].DON
-                    + SiteVars.MineralSoil[site].Nitrogen
+                    //+ SiteVars.MineralSoil[site].Nitrogen
                     ;
         
             return totalN;
@@ -751,7 +751,7 @@ namespace Landis.Extension.Succession.NECN
 
             double totalsoilN =
 
-            +SiteVars.MineralN[site]
+            +SiteVars.MineralSoil[site].Nitrogen
             + SiteVars.SurfaceStructural[site].Nitrogen
             + SiteVars.SoilStructural[site].Nitrogen
             + SiteVars.SurfaceMetabolic[site].Nitrogen

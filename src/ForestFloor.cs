@@ -10,8 +10,6 @@ using System.Collections.Generic;
 namespace Landis.Extension.Succession.NECN
 {
     /// <summary>
-    /// Soil organic matter (SOM) pool.
-    /// Mass = C Fraction + N Fraction + P Fraction + other(inexplicit).
     /// </summary>
     public class ForestFloor
     {

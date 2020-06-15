@@ -2,7 +2,7 @@ LandisData	"NECN Succession DAMM"
 
 Timestep  1
 
-CalibrateMode no
+CalibrateMode yes
 
 >> Climate and N inputs
 ClimateConfigFile		climate_gen_baseline-1y.txt
@@ -29,14 +29,14 @@ SoilParticleDensityMapName		./SingleCellRasters/ParticleDensity.tif
 Initial_OHorizon_C_MapName			./SingleCellRasters/singlecell_4600.tif
 Initial_OHorizon_N_MapName			./SingleCellRasters/singlecell_60.tif
 Initial_MineralSoil_C_MapName			./SingleCellRasters/singlecell_2.tif
-Initial_MineralSoil_N_MapName			./SingleCellRasters/singlecell_1.tif
+Initial_MineralSoil_N_MapName			./SingleCellRasters/singlecell_2.tif
 InitialDeadWoodSurfaceMapName	./SingleCellRasters/singlecell_1500.tif
 InitialDeadCoarseRootsMapName	./SingleCellRasters/singlecell_1600.tif
 
 >>Soil parameters
 WaterDecayFunction Linear <<Linear or Ratio  ML: not needed?  Make sure later
-InitialFineFuels		0.1
-InitialMineralN			1.697   << This came from Smith et al. 2000 Table 4 (old burn values)
+InitialFineFuels		0.9
+>>InitialMineralN			1.697   << This came from Smith et al. 2000 Table 4 (old burn values)
 InitialDOC			3.0  <<arbitrary and small
 >>InitialMicrobialC		1.9703	<< Rose
 >>InitialMicrobialN		0.197	<< Rose
@@ -46,15 +46,15 @@ InitialDOC			3.0  <<arbitrary and small
 DenitrificationRate		0.0 <<01  << Calibration target
 
 FractionLitterToDOC		0.066          << some fraction of litter goes immediately to DOC << Calibration target
-MicrobialTurnoverRate		0.0001437  << aka 'r_deather': Calibration target
-FractionUnprotectedSOM		0.0004048 << aka 'frac':  Calibration target
+MicrobialTurnoverRate		0.00001437  << aka 'r_deather': Calibration target
+FractionUnprotectedSOM		0.004048 << aka 'frac':  Calibration target
 EnzymeTurnoverRate		0.00095780  << aka 'r_ecloss': Calibration target
 CarbonUseEfficiency		0.357329 << aka 'c_use_efficiency':  Calibration target
 ProportionEnymeActing		0.522748  << aka 'p_enz_SOC:  Calibration target
 FractionMicrobialToSOM		0.551334  << aka 'mic_to_som': Calibration target
-FractionDOCtoMineralSoil	0.0005    << Calibration target?
+FractionDOCtoMineralSoil	0.0000    << Calibration target?
 FractionMineralSoilCFlowToCO2	0.9 << Dummy
-DecayRateMineralSoil		0.9	<< Dummy
+DecayRateMineralSoil		1.0	<< Dummy
 
 >>Dispersal parameters
 SeedingAlgorithm  WardSeedDispersal

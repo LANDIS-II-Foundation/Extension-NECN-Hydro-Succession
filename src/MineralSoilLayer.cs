@@ -36,7 +36,7 @@ namespace Landis.Extension.Succession.NECN
             double co2loss = totalCflow * PlugIn.Parameters.FractionMineralSoilToCO2;
             double netCFlow = totalCflow - co2loss;
             SiteVars.MineralSoil[site].Respiration(co2loss, site);
-            //PlugIn.ModelCore.UI.WriteLine("AfterTransferto.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
+            //PlugIn.ModelCore.UI.WriteLine("AfterTransferto.  MineralN={0:0.00}.", SiteVars.MineralSoil[site].Nitrogen);
 
             // Leaching next -----------------------------------------------------------
 

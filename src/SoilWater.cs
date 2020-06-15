@@ -473,24 +473,24 @@ namespace Landis.Extension.Succession.NECN
             //PlugIn.ModelCore.UI.WriteLine("WaterMove={0:0}, ", waterMove);         
            
          //...waterMove > 0. indicates a saturated water flow out of layer lyr
-            if (waterMove > 0.0 && SiteVars.MineralN[site] > 0.0)
+            if (waterMove > 0.0 && SiteVars.MineralSoil[site].Nitrogen > 0.0)
             {
                 double textureEffect = OtherData.MineralLeachIntercept + OtherData.MineralLeachSlope * SiteVars.SoilPercentSand[site];//ClimateRegionData.PercentSand[ecoregion];
                 //double leachIntensity = (1.0 - (OtherData.OMLeachWater - waterMove) / OtherData.OMLeachWater);
-                //amtNLeached = textureEffect * SiteVars.MineralN[site] * OtherData.NfracLeachWater * OtherData.NO3frac;
-                amtNLeached = textureEffect * SiteVars.MineralN[site] *  OtherData.NO3frac;
+                //amtNLeached = textureEffect * SiteVars.MineralSoil[site].Nitrogen * OtherData.NfracLeachWater * OtherData.NO3frac;
+                amtNLeached = textureEffect * SiteVars.MineralSoil[site].Nitrogen *  OtherData.NO3frac;
                 
-                //PlugIn.ModelCore.UI.WriteLine("amtNLeach={0:0.0}, textureEffect={1:0.0}, waterMove={2:0.0}, MineralN={3:0.00}", amtNLeached, textureEffect, waterMove, SiteVars.MineralN[site]);      
+                //PlugIn.ModelCore.UI.WriteLine("amtNLeach={0:0.0}, textureEffect={1:0.0}, waterMove={2:0.0}, MineralN={3:0.00}", amtNLeached, textureEffect, waterMove, SiteVars.MineralSoil[site].Nitrogen);      
             }        
             
             double totalNleached = (baseFlow * amtNLeached) + (stormFlow * amtNLeached);
                         
-            SiteVars.MineralN[site] -= totalNleached;
-            //PlugIn.ModelCore.UI.WriteLine("AfterSoilWaterLeaching. totalNLeach={0:0.0}, MineralN={1:0.00}", totalNleached, SiteVars.MineralN[site]);         
+            SiteVars.MineralSoil[site].Nitrogen -= totalNleached;
+            //PlugIn.ModelCore.UI.WriteLine("AfterSoilWaterLeaching. totalNLeach={0:0.0}, MineralN={1:0.00}", totalNleached, SiteVars.MineralSoil[site].Nitrogen);         
 
             SiteVars.Stream[site].Nitrogen += totalNleached;
             SiteVars.MonthlyStreamN[site][Main.Month] += totalNleached;
-            //PlugIn.ModelCore.UI.WriteLine("AfterSoilWaterLeaching. totalNLeach={0:0.0}, MineralN={1:0.00}", totalNleached, SiteVars.MineralN[site]);        
+            //PlugIn.ModelCore.UI.WriteLine("AfterSoilWaterLeaching. totalNLeach={0:0.0}, MineralN={1:0.00}", totalNleached, SiteVars.MineralSoil[site].Nitrogen);        
 
             return;
         }
